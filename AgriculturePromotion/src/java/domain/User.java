@@ -11,10 +11,14 @@ public class User {
     private String address;
     private Date birthday;
     private Timestamp createdAt;
-    private String fullname; // Added
+    private String fullName; // Added
     private String gender;   // Added
 
-    public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt, String fullname, String gender) {
+    public User() {
+    }
+    
+
+    public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt, String fullName, String gender) {
         this.id = id;
         this.email = email;
         this.role = role;
@@ -22,7 +26,7 @@ public class User {
         this.address = address;
         this.birthday = birthday;
         this.createdAt = createdAt;
-        this.fullname = fullname;
+        this.fullName = fullName;
         this.gender = gender;
     }
 
@@ -83,12 +87,12 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getGender() {
