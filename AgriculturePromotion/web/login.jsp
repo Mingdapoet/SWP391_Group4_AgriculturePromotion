@@ -67,7 +67,7 @@
 <body>
 <div class="login-container">
     <h2><i class="fas fa-leaf me-2"></i>Login</h2>
-    <form action="${pageContext.request.contextPath}/login" method="post">
+    <form action="${pageContext.request.contextPath}/login" method="post" onsubmit="return checkCaptcha();">
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" name="email" required>
@@ -75,16 +75,37 @@
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" name="password" required>
+             <div class="g-recaptcha" data-sitekey="6LcboUErAAAAAGZkSfxj-9fL7Z7FgeyP-DsULZ3b"></div>
+                        <p id="errorCaptcha" class="text-danger text-center mt-2"></p>
         </div>
         <button type="submit" class="btn btn-login w-100 text-white">Login</button>
     </form>
-    <div class="register-link">
-        <p>Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register.jsp">Đăng ký tại đây</a></p>
-    </div>
+   <div class="register-link">
+           <p>Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register.jsp">Đăng ký tại đây</a></p>
+            <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/AgriculturePromotion/login&response_type=code&client_id=143444256407-gngrrdra2ip9lsa5l3fkkb37mo7s6s3f.apps.googleusercontent.com&access_type=offline&prompt=consent"
+               class="btn btn-danger">
+               <i class="fab fa-google"></i> Đăng nhập với Google
+            </a>
+
+       </div>
     <% if (request.getAttribute("error") != null) { %>
         <p class="error-message text-danger"><%= request.getAttribute("error") %></p>
     <% } %>
 </div>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function checkCaptcha() {
+        var response = grecaptcha.getResponse();
+        var errorCaptcha = document.getElementById("errorCaptcha");
+
+        if (!response) {
+            errorCaptcha.textContent = "Vui lòng xác nhận bạn không phải robot!";
+            return false;
+        }
+
+        return true;
+    }
+</script>
 </body>
 </html>
