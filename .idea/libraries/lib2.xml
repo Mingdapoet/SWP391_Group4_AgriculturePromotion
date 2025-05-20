@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lib2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/AgriculturePromotion/lib/gson-2.10.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/AgriculturePromotion/lib/sqljdbc42.jar!/" />
+      <root url="jar://$PROJECT_DIR$/AgriculturePromotion/lib/jakarta.servlet.jsp.jstl-2.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/AgriculturePromotion/lib/jaxb-api-2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/AgriculturePromotion/lib/jakarta.servlet.jsp.jstl-api-2.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
