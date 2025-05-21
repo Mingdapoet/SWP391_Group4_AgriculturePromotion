@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBContext {
-     private static final String url = "jdbc:sqlserver://localhost:1433;databaseName=AgriPromo;encrypt=false";
+     private static final String url = "jdbc:sqlserver://localhost:1433;databaseName=AgriculturePromotion;encrypt=false";
     private static final String user = "sa"; // Thay bằng username SQL Server của bạn
     private static final String password = "123"; // Thay bằng mật khẩu
 
