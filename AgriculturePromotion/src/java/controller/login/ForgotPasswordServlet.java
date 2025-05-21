@@ -25,7 +25,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         User user = userDAO.getUserByEmail(email);
 
         if (user != null) {
-            // Tạo mã reset hoặc mật khẩu mới
+            // Tạo mã reset hật khẩu mới
             String newPassword = generateRandomPassword();
 
 //            userDAO.updatePasswordByEmail(email, newPassword);
