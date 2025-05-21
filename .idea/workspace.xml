@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cc126b40-e627-4a87-a594-fb93654c469b" name="Changes" comment="">
+    <list default="true" id="cc126b40-e627-4a87-a594-fb93654c469b" name="Changes" comment="Userlist(admin role)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AgriculturePromotion/build/web/abcd" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/AgriculturePromotion/src/java/dal/DBContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/AgriculturePromotion/src/java/dal/DBContext.java" afterDir="false" />
@@ -68,6 +68,19 @@
       <option name="presentableId" value="Default" />
       <updated>1747808497814</updated>
     </task>
+    <task id="LOCAL-00001" summary="Userlist(admin role)">
+      <option name="closed" value="true" />
+      <created>1747811165658</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1747811165658</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Userlist(admin role)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Userlist(admin role)" />
   </component>
 </project>
