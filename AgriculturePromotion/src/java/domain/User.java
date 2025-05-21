@@ -11,8 +11,9 @@ public class User {
     private String address;
     private Date birthday;
     private Timestamp createdAt;
-    private String fullname; // Added
-    private String gender;   // Added
+    private String fullname;
+    private String gender;
+    private String password; // Nếu bạn cần insert bằng insertUser()
 
     public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt, String fullname, String gender) {
         this.id = id;
@@ -24,6 +25,12 @@ public class User {
         this.createdAt = createdAt;
         this.fullname = fullname;
         this.gender = gender;
+    }
+
+    // Nếu bạn cần constructor có password
+    public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt, String fullname, String gender, String password) {
+        this(id, email, role, phone, address, birthday, createdAt, fullname, gender);
+        this.password = password;
     }
 
     // Getters and setters
@@ -97,5 +104,29 @@ public class User {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", birthday=" + birthday +
+                ", createdAt=" + createdAt +
+                ", fullname='" + fullname + '\'' +
+                ", gender='" + gender + '\'' +
+                ", password='" + (password != null ? "***" : null) + '\'' +
+                '}';
     }
 }
