@@ -8,6 +8,10 @@
       <root url="jar://$PROJECT_DIR$/AgriculturePromotion/build/web/WEB-INF/lib/sqljdbc42.jar!/" />
       <root url="jar://$USER_HOME$/Downloads/servlet-api.jar!/" />
       <root url="jar://$USER_HOME$/Downloads/mssql-jdbc-12.4.2.jre11.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/gson-2.13.1.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/fluent-hc-4.5.13.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/httpcore-4.4.13.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/httpclient-4.5.13.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

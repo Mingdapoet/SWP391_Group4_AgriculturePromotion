@@ -1,6 +1,7 @@
 package controller.login;
 
 import dal.UserDAO;
+import domain.LoginGoogle;
 import domain.User;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,4 +35,5 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.sendRedirect(request.getContextPath() + "/login.jsp"); // Updated path
     }
+
 }

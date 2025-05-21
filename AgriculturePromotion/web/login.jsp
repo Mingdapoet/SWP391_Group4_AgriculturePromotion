@@ -75,15 +75,18 @@
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" name="password" required>
-             <div class="g-recaptcha" data-sitekey="6LcboUErAAAAAGZkSfxj-9fL7Z7FgeyP-DsULZ3b"></div>
+             <div class="g-recaptcha mt-2" data-sitekey="6LcboUErAAAAAGZkSfxj-9fL7Z7FgeyP-DsULZ3b"></div>
                         <p id="errorCaptcha" class="text-danger text-center mt-2"></p>
         </div>
         <button type="submit" class="btn btn-login w-100 text-white">Login</button>
+        <div class="mt-2 text-end">
+                <a href="${pageContext.request.contextPath}/forgot-password.jsp" class="text-decoration-none">Quên mật khẩu?</a>
+            </div>
     </form>
    <div class="register-link">
            <p>Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register.jsp">Đăng ký tại đây</a></p>
             <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/AgriculturePromotion/login&response_type=code&client_id=143444256407-gngrrdra2ip9lsa5l3fkkb37mo7s6s3f.apps.googleusercontent.com&access_type=offline&prompt=consent"
-               class="btn btn-danger">
+               class="btn btn-primary text-white">
                <i class="fab fa-google"></i> Đăng nhập với Google
             </a>
 
