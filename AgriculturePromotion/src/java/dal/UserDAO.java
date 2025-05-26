@@ -27,7 +27,8 @@ public class UserDAO {
                         rs.getDate("birthday"),
                         rs.getTimestamp("created_at"),
                         rs.getString("fullname"), // Added
-                        rs.getString("gender") // Added
+                        rs.getString("gender"),
+                        rs.getString("password")// Added
                 );
             }
         } catch (SQLException e) {
@@ -58,21 +59,25 @@ public class UserDAO {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    User user = new User();
-                    user.setId(rs.getInt("id"));
-                    user.setEmail(rs.getString("email"));
-                    user.setPhone(rs.getString("phone"));
-                    user.setAddress(rs.getString("address"));
-                    user.setBirthday(rs.getDate("birthday"));
-                    user.setCreatedAt(rs.getTimestamp("created_at"));
-                    user.setFullName(rs.getString("full_name"));
-                    user.setGender(rs.getString("gender"));
-                    return user;
-                }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User(
+                    rs.getInt("id"),
+                    rs.getString("email"),
+                    rs.getString("role"),
+                    rs.getString("phone"),
+                    rs.getString("address"),
+                    rs.getDate("birthday"),
+                    rs.getTimestamp("created_at"),
+                    rs.getString("fullName"),
+                    rs.getString("gender"),
+                    rs.getString("password") // Sử dụng constructor mới
+                );
+                System.out.println("UserDAO.getUserByEmail - Email: " + email + ", Password: " + user.getPassword());
+                return user;
             }
         } catch (SQLException e) {
+            System.err.println("SQLException trong getUserByEmail: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -92,5 +97,19 @@ public class UserDAO {
             e.printStackTrace();
         }
         return false;
+    }
+     public boolean updatePassword(String email, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE email = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword); // Lưu plaintext
+            ps.setString(2, email);
+            int rows = ps.executeUpdate();
+            System.out.println("UserDAO.updatePassword - Email: " + email + ", Rows updated: " + rows);
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println("SQLException trong updatePassword: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 }
