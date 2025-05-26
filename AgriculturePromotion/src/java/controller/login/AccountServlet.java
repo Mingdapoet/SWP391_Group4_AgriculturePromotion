@@ -77,7 +77,7 @@ public class AccountServlet extends HttpServlet {
         if (phone == null || phone.trim().isEmpty()) {
             errors.put("phoneError", "Số điện thoại không được để trống");
         } else if (!phone.matches("^0\\d{8,10}$")) {
-            errors.put("phoneError", "Số điện thoại không hợp lệ, phải bắt đầu bằng 0 và có từ 9 đến 11 chữ số");
+            errors.put("phoneError", "Số điện thoại không hợp lệ, phải là dãy số bắt đầu bằng 0 và có từ 9 đến 11 chữ số");
         }
         return errors;
     }
@@ -87,8 +87,6 @@ public class AccountServlet extends HttpServlet {
         Map<String, String> errors = new HashMap<>();
         if (address == null || address.trim().isEmpty()) {
             errors.put("addressError", "Địa chỉ không được để trống");
-        } else if (address.length() > 255) {
-            errors.put("addressError", "Địa chỉ không được vượt quá 255 ký tự");
         }
         return errors;
     }
@@ -98,6 +96,24 @@ public class AccountServlet extends HttpServlet {
         Map<String, String> errors = new HashMap<>();
         if (birthdayStr == null || birthdayStr.trim().isEmpty()) {
             errors.put("birthdayError", "Ngày sinh không được để trống");
+        } else
+             try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setLenient(false);
+            Date birthday = sdf.parse(birthdayStr);
+            Date now = new Date();
+            if (birthday.after(now)) {
+                errors.put("birthdayError", "Ngày sinh không thể là ngày tương lai");
+            }
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(now);
+            cal.add(Calendar.YEAR, -16);
+            if (birthday.after(cal.getTime())) {
+                errors.put("birthdayError", "Tuổi phải lớn hơn hoặc bằng 16");
+            }
+        } catch (ParseException e) {
+            errors.put("birthdayError", "Ngày sinh không hợp lệ");
         }
         return errors;
     }
@@ -170,11 +186,12 @@ public class AccountServlet extends HttpServlet {
         if (!errors.isEmpty()) {
             request.setAttribute("errors", errors);
 
-            user.setFullName(fullName);
-            user.setGender(gender);
-            user.setPhone(phone);
-            user.setAddress(address);
-            user.setBirthday(birthday);
+            User tempUser = new User();
+            tempUser.setFullName(fullName);
+            tempUser.setGender(gender);
+            tempUser.setPhone(phone);
+            tempUser.setAddress(address);
+            tempUser.setBirthday(birthday);
 
             request.setAttribute("user", user);
             request.getRequestDispatcher("editprofile.jsp").forward(request, response);
