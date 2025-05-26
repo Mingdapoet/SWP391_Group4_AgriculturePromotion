@@ -102,9 +102,6 @@ public class AccountServlet extends HttpServlet {
             sdf.setLenient(false);
             Date birthday = sdf.parse(birthdayStr);
             Date now = new Date();
-            if (birthday.after(now)) {
-                errors.put("birthdayError", "Ngày sinh không thể là ngày tương lai");
-            }
 
             Calendar cal = Calendar.getInstance();
             cal.setTime(now);

@@ -445,6 +445,7 @@
                         <div class="carousel-item">
                             <img src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=1920&q=80" alt="Banner 2">
                             <h2>Tin tức nổi bật</h2>
+
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
@@ -505,10 +506,71 @@
                                     <span class="visually-hidden">Next</span>
                                 </button>
                             </div>
+                            
                         </div>
                     </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </section>
+
+<div class="container-fluid py-4">
+    <div class="row"> <%-- Changed to use Bootstrap's row --%>
+        <div class="col-md-3"> <%-- Bootstrap column for 30% (approx) --%>
+            <div class="sidebar bg-light p-3 rounded shadow-sm">
+                <h3 class="mb-3">Danh mục</h3>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="#"><i class="fas fa-leaf me-2"></i> Sống xanh</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="#"><i class="fas fa-truck me-2"></i> Nguồn cung cấp</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="#"><i class="fas fa-map-marker-alt me-2"></i> Đặc sản vùng miền</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-utensils me-2"></i> Ẩm thực</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9"> <%-- Bootstrap column for 70% (approx) --%>
+            <div class="main-content bg-white p-4 rounded shadow-sm">
+                <h2 class="mb-4">Tin tức nông dân</h2>
+                <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active text-center">
+                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" class="d-block mx-auto rounded mb-3" alt="Tin tức 1">
+                            <h5>Tin tức nông dân 1</h5>
+                            <p>Cập nhật mới nhất từ cộng đồng nông dân.</p>
+                        </div>
+                        <div class="carousel-item text-center">
+                            <img src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80" class="d-block mx-auto rounded mb-3" alt="Tin tức 2">
+                            <h5>Tin tức nông dân 2</h5>
+                            <p>Thông tin về mùa vụ mới tại vùng nông thôn.</p>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -556,6 +618,55 @@
                     </div>
                 </div>
             </div>
+
+
+
+
+            <div class="container-fluid py-4">
+                <div class="row row-cols-1 row-cols-md-2 g-4"> <%-- Adjusted for better responsive behavior --%>
+                    <div class="col text-center">
+                        <h2 class="mb-4">Nhịp sống nông dân</h2>
+                        <div class="news-card">
+                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&q=80" class="rounded mb-3" alt="Nhịp sống 1">
+                            <h5>Nhịp sống nông dân 1</h5>
+                            <p>Chia sẻ về cuộc sống hàng ngày của nông dân.</p>
+                        </div>
+                        <div class="news-card">
+                            <img src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=300&q=80" class="rounded mb-3" alt="Nhịp sống 2">
+                            <h5>Nhịp sống nông dân 2</h5>
+                            <p>Câu chuyện về việc áp dụng công nghệ.</p>
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col text-center">
+                        <h2 class="mb-4">Khám phá</h2>
+                        <div class="explore-card">
+                            <img src="https://images.unsplash.com/photo-1570913149827-996dd1d9c165?auto=format&fit=crop&w=300&q=80" class="rounded mb-3" alt="Khám phá 1">
+                            <h5>Khám phá 1</h5>
+                            <p>Khám phá quy trình sản xuất nông sản sạch.</p>
+                        </div>
+                        <div class="explore-card">
+                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&q=80" class="rounded mb-3" alt="Khám phá 2">
+                            <h5>Khám phá 2</h5>
+                            <p>Tìm hiểu về các loại trái cây đặc sản.</p>
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
 
             <footer>
                 <div class="container">
