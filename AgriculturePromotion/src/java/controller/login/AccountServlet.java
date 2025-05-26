@@ -51,6 +51,70 @@ public class AccountServlet extends HttpServlet {
         }
     }
 
+    // Validate full name
+    private Map<String, String> validateFullName(String fullName) {
+        Map<String, String> errors = new HashMap<>();
+        if (fullName == null || fullName.trim().isEmpty()) {
+            errors.put("fullNameError", "Họ tên không được để trống");
+        } else if (!fullName.matches("^[\\p{L} .'-]+$")) { // Chỉ cho phép chữ, dấu cách, dấu chấm, dấu nháy đơn và dấu gạch ngang
+            errors.put("fullNameError", "Họ tên chứa ký tự không hợp lệ");
+        }
+        return errors;
+    }
+
+    // Validate gender
+    private Map<String, String> validateGender(String gender) {
+        Map<String, String> errors = new HashMap<>();
+        if (gender == null || !(gender.equals("Nam") || gender.equals("Nữ") || gender.equals("Khác"))) {
+            errors.put("genderError", "Vui lòng chọn giới tính hợp lệ");
+        }
+        return errors;
+    }
+
+    // Validate phone number
+    private Map<String, String> validatePhone(String phone) {
+        Map<String, String> errors = new HashMap<>();
+        if (phone == null || phone.trim().isEmpty()) {
+            errors.put("phoneError", "Số điện thoại không được để trống");
+        } else if (!phone.matches("^0\\d{8,10}$")) {
+            errors.put("phoneError", "Số điện thoại không hợp lệ, phải là dãy số bắt đầu bằng 0 và có từ 9 đến 11 chữ số");
+        }
+        return errors;
+    }
+
+    //Validate address
+    private Map<String, String> validateAddress(String address) {
+        Map<String, String> errors = new HashMap<>();
+        if (address == null || address.trim().isEmpty()) {
+            errors.put("addressError", "Địa chỉ không được để trống");
+        }
+        return errors;
+    }
+
+    // Validate birthday
+    private Map<String, String> validateBirthday(String birthdayStr) {
+        Map<String, String> errors = new HashMap<>();
+        if (birthdayStr == null || birthdayStr.trim().isEmpty()) {
+            errors.put("birthdayError", "Ngày sinh không được để trống");
+        } else
+             try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setLenient(false);
+            Date birthday = sdf.parse(birthdayStr);
+            Date now = new Date();
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(now);
+            cal.add(Calendar.YEAR, -16);
+            if (birthday.after(cal.getTime())) {
+                errors.put("birthdayError", "Tuổi phải lớn hơn hoặc bằng 16");
+            }
+        } catch (ParseException e) {
+            errors.put("birthdayError", "Ngày sinh không hợp lệ");
+        }
+        return errors;
+    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -100,29 +164,18 @@ public class AccountServlet extends HttpServlet {
 
         Map<String, String> errors = new HashMap<>();
 
-        // Validate fullname
-        if (fullName == null || fullName.trim().isEmpty()) {
-            errors.put("fullNameError", "Họ tên không được để trống");
-        }
-
-        // Validate gender
-        if (gender == null || !(gender.equals("Nam") || gender.equals("Nữ") || gender.equals("Khác"))) {
-            errors.put("genderError", "Vui lòng chọn giới tính hợp lệ");
-        }
-
-        // Validate phone
-        if (phone == null || phone.trim().isEmpty()) {
-            errors.put("phoneError", "Số điện thoại không được để trống");
-        }
+        errors.putAll(validateFullName(fullName));
+        errors.putAll(validateGender(gender));
+        errors.putAll(validatePhone(phone));
+        errors.putAll(validateAddress(address));
+        errors.putAll(validateBirthday(birthdayStr));
 
         java.sql.Date birthday = null;
-        if (birthdayStr == null || birthdayStr.trim().isEmpty()) {
-            errors.put("birthdayError", "Ngày sinh không được để trống");
-        } else {
+        if (!errors.containsKey("birthdayError")) {
             try {
                 java.util.Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(birthdayStr);
                 birthday = new java.sql.Date(parsedDate.getTime());
-            } catch (Exception e) {
+            } catch (ParseException e) {
                 errors.put("birthdayError", "Ngày sinh không hợp lệ");
             }
         }
@@ -130,11 +183,12 @@ public class AccountServlet extends HttpServlet {
         if (!errors.isEmpty()) {
             request.setAttribute("errors", errors);
 
-            user.setFullName(fullName);
-            user.setGender(gender);
-            user.setPhone(phone);
-            user.setAddress(address);
-            user.setBirthday(birthday);
+            User tempUser = new User();
+            tempUser.setFullName(fullName);
+            tempUser.setGender(gender);
+            tempUser.setPhone(phone);
+            tempUser.setAddress(address);
+            tempUser.setBirthday(birthday);
 
             request.setAttribute("user", user);
             request.getRequestDispatcher("editprofile.jsp").forward(request, response);

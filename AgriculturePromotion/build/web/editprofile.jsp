@@ -79,7 +79,7 @@
                 <div class="mb-3">
                     <label for="fullName" class="form-label">Họ tên</label>
                     <input type="text" class="form-control" id="fullName" name="fullName"
-                           value="<%= user.getFullName() != null ? user.getFullName() : "" %>" required />
+                           value="<%= user.getFullName() != null ? user.getFullName() : "" %>" />
                     <% if (errors != null && errors.get("fullNameError") != null) { %>
                     <div class="text-danger"><%= errors.get("fullNameError") %></div>
                     <% } %>
@@ -87,7 +87,7 @@
 
                 <div class="mb-3">
                     <label for="gender" class="form-label">Giới tính</label>
-                    <select class="form-select" id="gender" name="gender" required>
+                    <select class="form-select" id="gender" name="gender">
                         <option value="Nam" <%= "Nam".equals(user.getGender()) ? "selected" : "" %>>Nam</option>
                         <option value="Nữ" <%= "Nữ".equals(user.getGender()) ? "selected" : "" %>>Nữ</option>
                         <option value="Khác" <%= "Khác".equals(user.getGender()) ? "selected" : "" %>>Khác</option>
@@ -113,6 +113,9 @@
                 <div class="mb-3">
                     <label for="address" class="form-label">Địa chỉ</label>
                     <textarea class="form-control" id="address" name="address" rows="3"><%= user.getAddress() != null ? user.getAddress() : "" %></textarea>
+                    <% if (errors != null && errors.get("addressError") != null) { %>
+                    <div class="text-danger"><%= errors.get("addressError") %></div>
+                    <% } %>
                 </div>
 
                 <div class="mb-3">
@@ -123,12 +126,17 @@
                     <div class="text-danger"><%= errors.get("birthdayError") %></div>
                     <% } %>
                 </div>
+                <div class="d-flex gap-2 mt-3 justify-content-center">
+                    <button type="submit" class="btn btn-success btn-genz px-4 py-2" style="font-size: 0.9rem;">
+                        <i class="fas fa-save me-2"></i> Lưu thay đổi
+                    </button>
+                    <a href="profile.jsp" class="btn btn-danger btn-genz px-4 py-2" style="font-size: 0.9rem;">
+                        <i class="fas fa-times me-2"></i> Hủy
+                    </a>
+                </div>
 
         </div>
-        <div class="d-flex gap-2 mt-3 justify-content-center">
-            <button type="submit" class="btn btn-success btn-genz px-4 py-2" style="font-size: 0.9rem;">Lưu thay đổi</button>
-            <a href="profile.jsp" class="btn btn-outline-secondary btn-genz px-4 py-2" style="font-size: 0.9rem;">Hủy</a>
-        </div>
+
 
     </form>
 </div>

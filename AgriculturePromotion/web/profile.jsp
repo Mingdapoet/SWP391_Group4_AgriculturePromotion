@@ -106,6 +106,7 @@
                 <a href="index.jsp" class="btn btn-outline-primary btn-genz w-50">🏡 Trang chủ</a>
             </div>
         </div>
+                
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             window.onload = function () {
@@ -117,6 +118,6 @@
                     }, 5000); // 5000ms = 5 second
                 }
             };
-
-            </body>
-                    </html>
+        </script>
+    </body>
+</html>
