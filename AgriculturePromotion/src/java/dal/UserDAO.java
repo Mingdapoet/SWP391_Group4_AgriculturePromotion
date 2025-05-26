@@ -1,7 +1,11 @@
 package dal;
 
 import domain.User;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import static dal.DBContext.getConnection;
 
 public class UserDAO {
 
@@ -26,8 +30,9 @@ public class UserDAO {
                         rs.getString("address"),
                         rs.getDate("birthday"),
                         rs.getTimestamp("created_at"),
-                        rs.getString("fullname"), // Added
-                        rs.getString("gender") // Added
+                        rs.getString("fullName"),
+                        rs.getString("gender"),
+                        rs.getString("password")
                 );
             }
         } catch (SQLException e) {
@@ -36,8 +41,8 @@ public class UserDAO {
         return null;
     }
 
-    public boolean register(String email, String password, String role, String phone, String address, Date birthday, String fullname, String gender) {
-        String sql = "INSERT INTO users (email, password, role, phone, address, birthday, fullname, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public boolean register(String email, String password, String role, String phone, String address, Date birthday, String fullName, String gender) {
+        String sql = "INSERT INTO users (email, password, role, phone, address, birthday, fullName, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
             ps.setString(2, password);
@@ -45,8 +50,8 @@ public class UserDAO {
             ps.setString(4, phone);
             ps.setString(5, address);
             ps.setDate(6, birthday);
-            ps.setString(7, fullname); // Added
-            ps.setString(8, gender);   // Added
+            ps.setString(7, fullName);
+            ps.setString(8, gender);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -58,28 +63,31 @@ public class UserDAO {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    User user = new User();
-                    user.setId(rs.getInt("id"));
-                    user.setEmail(rs.getString("email"));
-                    user.setPhone(rs.getString("phone"));
-                    user.setAddress(rs.getString("address"));
-                    user.setBirthday(rs.getDate("birthday"));
-                    user.setCreatedAt(rs.getTimestamp("created_at"));
-                    user.setFullName(rs.getString("full_name"));
-                    user.setGender(rs.getString("gender"));
-                    return user;
-                }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("role"),
+                        rs.getString("phone"),
+                        rs.getString("address"),
+                        rs.getDate("birthday"),
+                        rs.getTimestamp("created_at"),
+                        rs.getString("fullName"),
+                        rs.getString("gender"),
+                        rs.getString("password")
+                );
+                System.out.println("UserDAO.getUserByEmail - Email: " + email + ", Password: " + user.getPassword());
+                return user;
             }
         } catch (SQLException e) {
+            System.err.println("SQLException trong getUserByEmail: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
     }
-
     public boolean updateUserProfile(User user) {
-        String sql = "UPDATE users SET phone = ?, address = ?, birthday = ?, fullname = ?, gender = ? WHERE id = ?";
+        String sql = "UPDATE users SET phone = ?, address = ?, birthday = ?, fullName = ?, gender = ? WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getPhone());
             ps.setString(2, user.getAddress());
@@ -93,4 +101,19 @@ public class UserDAO {
         }
         return false;
     }
+    public boolean updatePassword(String email, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE email = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword); // Lưu plaintext
+            ps.setString(2, email);
+            int rows = ps.executeUpdate();
+            System.out.println("UserDAO.updatePassword - Email: " + email + ", Rows updated: " + rows);
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println("SQLException trong updatePassword: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

@@ -13,7 +13,12 @@
     created_at DATETIME DEFAULT GETDATE()
 );
 
-
+ALTER TABLE users
+MODIFY COLUMN password VARCHAR(255) NULL,
+MODIFY COLUMN phone VARCHAR(20) NULL,
+MODIFY COLUMN address VARCHAR(255) NULL,
+MODIFY COLUMN birthday DATE NULL,
+MODIFY COLUMN gender VARCHAR(10) NULL;
 
 INSERT INTO users (fullname, gender, birthday, phone, email, password, address, role)
 VALUES

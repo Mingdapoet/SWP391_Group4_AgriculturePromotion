@@ -11,8 +11,9 @@ public class User {
     private String address;
     private Date birthday;
     private Timestamp createdAt;
-    private String fullName; // Added
-    private String gender;   // Added
+    private String fullName;
+    private String gender;
+    private String password;
 
     public User() {
     }
@@ -29,7 +30,18 @@ public class User {
         this.fullName = fullName;
         this.gender = gender;
     }
-
+    public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt, String fullName, String gender, String password) {
+        this.id = id;
+        this.email = email;
+        this.role = role;
+        this.phone = phone;
+        this.address = address;
+        this.birthday = birthday;
+        this.createdAt = createdAt;
+        this.fullName = fullName;
+        this.gender = gender;
+        this.password = password;
+    }
     // Getters and setters
     public int getId() {
         return id;
@@ -101,5 +113,13 @@ public class User {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

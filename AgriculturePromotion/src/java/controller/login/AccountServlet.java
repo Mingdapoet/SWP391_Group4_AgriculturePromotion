@@ -24,16 +24,6 @@ import java.util.*;
  */
 @WebServlet(name = "AccountServlet", urlPatterns = {"/Account"})
 public class AccountServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -104,7 +94,6 @@ public class AccountServlet extends HttpServlet {
         if (fullName == null || fullName.trim().isEmpty()) {
             errors.put("fullNameError", "Họ tên không được để trống");
         }
-
         // Validate gender
         if (gender == null || !(gender.equals("Nam") || gender.equals("Nữ") || gender.equals("Khác"))) {
             errors.put("genderError", "Vui lòng chọn giới tính hợp lệ");

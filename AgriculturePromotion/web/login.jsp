@@ -63,38 +63,38 @@
             margin-top: 1rem;
         }
         .google-signin-button {
-                     display: flex;
-                     align-items: center;
-                     justify-content: center;
-                     background-color: #e0e0e0;
-                     border: 1px solid #dadce0;
-                     border-radius: 24px;
-                     padding: 10px 16px;
-                     text-decoration: none;
-                     color: #3c4043;
-                     font-family: 'Roboto', sans-serif;
-                     font-size: 14px;
-                     font-weight: 500;
-                     width: 100%;
-                     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-                     margin-top: 1rem;
-                 }
-                 .google-signin-button:hover {
-                     background-color: #cccccc;
-                     border: none;
-                     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-                 }
-                 .google-icon {
-                     width: 18px;
-                     height: 18px;
-                     margin-right: 8px;
-                 }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e0e0e0;
+            border: 1px solid #dadce0;
+            border-radius: 24px;
+            padding: 10px 16px;
+            text-decoration: none;
+            color: #3c4043;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            width: 100%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            margin-top: 1rem;
+        }
+        .google-signin-button:hover {
+            background-color: #cccccc;
+            border: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .google-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
 <div class="login-container">
     <h2><i class="fas fa-leaf me-2"></i>Login</h2>
-    <form action="${pageContext.request.contextPath}/login" method="post">
+    <form action="${pageContext.request.contextPath}/login" method="post" onsubmit="return checkCaptcha()">
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" name="email" required>
@@ -102,18 +102,18 @@
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" name="password" required>
-           <div class="g-recaptcha mt-2" data-sitekey="6LcboUErAAAAAGZkSfxj-9fL7Z7FgeyP-DsULZ3b"></div>
-                                   <p id="errorCaptcha" class="text-danger text-center mt-2"></p>
+            <div class="g-recaptcha mt-2" data-sitekey="6LcboUErAAAAAGZkSfxj-9fL7Z7FgeyP-DsULZ3b"></div>
+            <p id="errorCaptcha" class="text-danger text-center mt-2"></p>
         </div>
         <button type="submit" class="btn btn-login w-100 text-white">Login</button>
     </form>
     <div class="register-link">
         <p>Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register.jsp">Đăng ký tại đây</a></p>
-        <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/AgriculturePromotion/login&response_type=code&client_id=143444256407-gngrrdra2ip9lsa5l3fkkb37mo7s6s3f.apps.googleusercontent.com&access_type=offline&prompt=consent"
-                      class="google-signin-button">
-                                  <img class="google-icon" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
-                                  Sign in with Google
-                    </a>
+        <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/AgriculturePromotion/googleCallback&response_type=code&client_id=799257369726-5f4bmtll9vr8hb1e066asncb2c1i0m4t.apps.googleusercontent.com&access_type=offline&prompt=consent"
+           class="google-signin-button">
+            <img class="google-icon" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+            Sign in with Google
+        </a>
     </div>
     <% if (request.getAttribute("error") != null) { %>
         <p class="error-message text-danger"><%= request.getAttribute("error") %></p>
@@ -130,7 +130,6 @@
             errorCaptcha.textContent = "Vui lòng xác nhận bạn không phải robot!";
             return false;
         }
-
         return true;
     }
 </script>

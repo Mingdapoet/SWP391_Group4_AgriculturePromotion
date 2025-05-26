@@ -84,9 +84,9 @@
                     <div class="text-danger"><%= errors.get("birthdayError") %></div>
                     <% } %>
                 </div>
-
                 <button type="submit" class="btn btn-success">Lưu thay đổi</button>
                 <a href="profile.jsp" class="btn btn-secondary ms-2">Hủy</a>
+                <a href="changepassword.jsp" class="btn btn-primary ms-2">Đổi mật khẩu</a>
             </form>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

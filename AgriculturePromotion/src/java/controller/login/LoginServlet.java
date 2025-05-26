@@ -22,16 +22,16 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/index.jsp");
             } else {
                 request.setAttribute("error", "Invalid email or password");
-                request.getRequestDispatcher("/login.jsp").forward(request, response); // Updated path
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/error.jsp"); // Use context path
+            response.sendRedirect(request.getContextPath() + "/error.jsp");
         }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + "/login.jsp"); // Updated path
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
     }
 }
