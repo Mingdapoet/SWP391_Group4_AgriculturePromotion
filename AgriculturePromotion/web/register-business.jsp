@@ -6,31 +6,23 @@
         response.sendRedirect("login.jsp");
         return;
     }
-    
-    String msg = request.getParameter("msg");
-    if (msg == null) {
-        msg = "";
-    }
 %>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Thông tin cá nhân</title>
+        <title>Đăng ký doanh nghiệp</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <style>
             body {
                 font-family: 'Roboto', sans-serif;
-                background-color: #f5f5f5;
+                background-color: #f7fef9;
                 color: #333;
-                line-height: 1.6;
                 margin: 0;
                 min-height: 100vh;
-                background: #f7fef9;
                 display: flex;
                 flex-direction: column;
-                justify-content: flex-start; /* Đẩy nội dung lên trên */
             }
             /* Header Top (White Background) */
             .header-top {
@@ -82,7 +74,6 @@
             .nav-item.dropdown::marker {
                 content: none !important;
             }
-
             /* Header Bottom (Green Background) */
             .header-bottom {
                 background: #2e7d32;
@@ -121,7 +112,7 @@
             .header-bottom .user-actions a:hover {
                 color: #a5d6a7;
             }
-
+            /* Sidebar */
             .sidebar {
                 background: #fff;
                 padding: 20px;
@@ -151,52 +142,79 @@
                 font-weight: normal;
                 font-size: 0.97em;
             }
-            .main-content-wrapper {
-                margin-left: 220px; /* để không bị sidebar che */
-                flex-grow: 1;
-                display: flex;
-                justify-content: center; /* căn giữa ngang */
-                align-items: flex-start; /* canh top */
-                padding: 40px 20px;
-                min-height: 100vh;
-            }
-            .profile-card {
-                max-width: 480px;
-                margin: 24px auto 16px auto;   /* Giảm top xuống 24px, bottom 16px */
-                padding: 24px 18px 18px 18px;  /* Thu nhỏ padding xung quanh */
+            /* Form container */
+            .form-container {
                 background: #fff;
-                border-radius: 24px;
-                box-shadow: 0 4px 32px rgba(34,197,94,0.10), 0 1.5px 6px rgba(0,0,0,0.06);
+                padding: 30px 40px;
+                border-radius: 30px;
+                box-shadow: 0 6px 18px rgb(34 197 94 / 20%);
+                max-width: 1000px;
+                margin: 24px auto;
+                border: 1px solid #15803d;
             }
-            .profile-title {
-                font-weight: bold;
-                font-size: 1.7rem;
+            .form-container h5 {
+                font-weight: 700;
                 color: #15803d;
-                text-align: center;
+                margin-bottom: 20px;
             }
-            .profile-table th, .profile-table td {
+            .form-group {
+                display: flex;
+                align-items: center;
+                margin-bottom: 18px;
+            }
+            .form-group label {
+                font-weight: 600;
+                width: 180px; /* width cố định cho label */
+                margin-bottom: 0;
+            }
+
+            .form-group input,
+            .form-group select {
+                flex-grow: 1;
+                padding: 8px 12px;
                 font-size: 1rem;
-                vertical-align: middle;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                outline-offset: 0;
+                transition: border-color 0.3s ease;
             }
-            .btn-genz {
-                border-radius: 999px;
-                font-weight: bold;
-                transition: 0.25s;
-                box-shadow: 0 2px 8px rgba(34,197,94,0.08);
+            .form-group input:focus,
+            .form-group select:focus {
+                border-color: #15803d;
+                outline: none;
             }
-            .btn-genz:hover {
-                transform: translateY(-3px) scale(1.04);
-                opacity: 0.92;
-                box-shadow: 0 4px 18px rgba(34,197,94,0.17);
+            .checkbox-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 20px;
+                font-weight: 700;
+                color: #15803d;
             }
-            @media (min-width: 800px) {
-                .profile-card {
-                    margin-top: 48px;
-                }
+            .submit-btn {
+                background-color: #15803d;
+                color: white;
+                border-radius: 30px;
+                padding: 10px 20px;
+                border: none;
+                font-weight: 600;
+                width: 150px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+            .submit-btn:hover {
+                background-color: #0b4a1e;
             }
             @media (max-width: 799px) {
-                .profile-card {
-                    margin-top: 16px;
+                .sidebar {
+                    height: auto;
+                    position: relative;
+                    top: 0;
+                    margin-bottom: 20px;
+                }
+                .form-container {
+                    margin: 20px 10px;
+                    padding: 20px 15px;
                 }
             }
         </style>
@@ -220,7 +238,6 @@
 
         <div class="header-bottom bg-success text-white py-2">
             <div class="container-fluid d-flex align-items-center position-relative">
-
                 <ul class="navbar-nav d-flex flex-row gap-4 mb-0 position-absolute start-50 translate-middle-x">
                     <li class="nav-item">
                         <a class="nav-link text-white" href="${pageContext.request.contextPath}/index.jsp">Trang chủ</a>
@@ -258,6 +275,7 @@
                 </div>
             </div>
         </div>
+
         <div class="container-fluid py-4">
             <div class="row">
                 <!-- Sidebar -->
@@ -274,60 +292,80 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-9 center-content">
-                    <div class="profile-card w-100" style="max-width: 500px;">
-                        <% if ("success".equals(msg)) { %>
-                        <div class="alert alert-success">Cập nhật thông tin thành công!</div>
-                        <% } else if ("business_success".equals(msg)) { %>
-                        <div class="alert alert-success">Đăng ký doanh nghiệp thành công!</div>
-                        <% } %>
+                <!-- Form đăng ký doanh nghiệp -->
+                <div class="col-md-9 d-flex justify-content-center">
+                    <form class="form-container" method="post" action="Account" enctype="multipart/form-data">
+                        <input type="hidden" name="action" value="registerBusiness">
+                        <h5>1 Thông tin doanh nghiệp</h5>
+                        <div class="form-group">
+                            <label for="companyName">Tên doanh nghiệp</label>
+                            <input type="text" id="companyName" name="companyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="headquarters">Địa chỉ trụ sở chính</label>
+                            <input type="text" id="headquarters" name="headquarters" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessType">Loại hình doanh nghiệp</label>
+                            <select id="businessType" name="businessType" required onchange="toggleCustomType()">
+                                <option value="" selected>-- Chọn loại hình --</option>
+                                <option value="TNHH">Công ty TNHH</option>
+                                <option value="CP">Công ty Cổ phần</option>
+                                <option value="TN">Doanh nghiệp tư nhân</option>
+                                <option value="HTX">Hợp tác xã</option>
+                                <option value="Khác">Khác</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="customTypeWrapper" style="display:none;">
+                            <label for="customType">Nhập loại hình khác</label>
+                            <input type="text" id="customType" name="customType" class="form-control" placeholder="Nhập loại hình khác...">
+                        </div>
 
-                        <div class="profile-title mb-3">
-                            <%= user.getFullName() != null ? user.getFullName() : "Chưa cập nhật" %>
+
+                        <h5>2 Thông tin người đại diện pháp luật</h5>
+                        <div class="form-group">
+                            <label for="repName">Họ và tên</label>
+                            <input type="text" id="repName" name="repName" required>
                         </div>
-                        <table class="table profile-table">
-                            <tr>
-                                <th>Giới tính</th>
-                                <td><%= user.getGender() != null ? user.getGender() : "Chưa cập nhật" %></td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td><%= user.getEmail() %></td>
-                            </tr>
-                            <tr>
-                                <th>Số điện thoại</th>
-                                <td><%= user.getPhone() != null ? user.getPhone() : "Chưa cập nhật" %></td>
-                            </tr>
-                            <tr>
-                                <th>Địa chỉ</th>
-                                <td><%= user.getAddress() != null ? user.getAddress() : "Chưa cập nhật" %></td>
-                            </tr>
-                            <tr>
-                                <th>Ngày sinh</th>
-                                <td><%= user.getBirthday() != null ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(user.getBirthday()) : "Chưa cập nhật" %></td>
-                            </tr>
-                        </table>
-                        <div class="d-flex justify-content-between gap-2 mt-3">
-                            <a href="editprofile.jsp" class="btn btn-success btn-genz w-50">✏️ Chỉnh sửa</a>
-                            <a href="index.jsp" class="btn btn-outline-primary btn-genz w-50">🏡 Trang chủ</a>
+                        <div class="form-group">
+                            <label for="repPosition">Chức vụ</label>
+                            <input type="text" id="repPosition" name="repPosition" required>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label for="repPhone">Số điện thoại</label>
+                            <input type="tel" id="repPhone" name="repPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="repEmail">Email</label>
+                            <input type="email" id="repEmail" name="repEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="legalDoc">Giấy chứng nhận đăng ký kinh doanh</label>
+                            <input type="file" id="legalDoc" name="legalDoc" accept=".pdf,.doc,.docx">
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="commitment" name="commitment" required>
+                            <label for="commitment">Cam kết</label>
+                        </div>
+                        <button type="submit" class="submit-btn">Gửi đơn</button>
+                    </form>
                 </div>
             </div>
         </div>
-
         <script>
-            window.onload = function () {
-                var alertBox = document.getElementById('success-alert');
-                if (alertBox) {
-                    alertBox.style.display = 'block';
-                    setTimeout(function () {
-                        alertBox.style.display = 'none';
-                    }, 5000); // 5000ms = 5 second
-                }
-            };
-        </script>
+            function toggleCustomType() {
+                const selected = document.getElementById("businessType").value;
+                const wrapper = document.getElementById("customTypeWrapper");
+                const input = document.getElementById("customType");
 
+                if (selected === "Khác") {
+                    wrapper.style.display = "flex";
+                } else {
+                    wrapper.style.display = "none";
+                    input.value = "";
+                }
+            }
+        </script>
         <script>
             function toggleBusinessDropdown() {
                 var dropdown = document.getElementById("business-dropdown");

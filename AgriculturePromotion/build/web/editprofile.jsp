@@ -65,6 +65,7 @@
         </style>
     </head>
     <body style="background: #f7fef9;">
+
         <div class="edit-card">
             <h3 class="mb-3 text-center" style="color: #16a34a;">Cập nhật thông tin cá nhân</h3>
 
@@ -76,6 +77,7 @@
             <% } %>
 
             <form action="Account" method="post">
+                <input type="hidden" name="action" value="editProfile">
                 <div class="mb-3">
                     <label for="fullName" class="form-label">Họ tên</label>
                     <input type="text" class="form-control" id="fullName" name="fullName"
@@ -134,20 +136,20 @@
                         <i class="fas fa-times me-2"></i> Hủy
                     </a>
                 </div>
-                  <div class="text-center mt-3">
-            <a href="changepassword.jsp" class="btn btn-warning btn-genz px-4 py-2" style="font-size: 0.9rem;">
-                <i class="fas fa-lock me-2"></i> Đổi mật khẩu
-            </a>
+                <div class="text-center mt-3">
+                    <a href="changepassword.jsp" class="btn btn-warning btn-genz px-4 py-2" style="font-size: 0.9rem;">
+                        <i class="fas fa-lock me-2"></i> Đổi mật khẩu
+                    </a>
+                </div>
+            </form>
         </div>
 
-        </div>
 
 
-    </form>
-              
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
