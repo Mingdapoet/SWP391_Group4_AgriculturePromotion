@@ -270,7 +270,7 @@
                         </a>
                         <div id="business-dropdown" style="display: none; margin-left: 16px;">
                             <a href="register-business.jsp" class="sidebar-link">Viết đơn</a>
-                            <a href="register-business-list.jsp" class="sidebar-link">Xem danh sách đơn</a>
+                            <a href="Account?action=listBusiness" class="sidebar-link">Xem danh sách đơn</a>
                         </div>
                     </div>
                 </div>
