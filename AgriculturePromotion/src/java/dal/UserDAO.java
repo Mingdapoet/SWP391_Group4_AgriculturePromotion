@@ -1,6 +1,6 @@
 package dal;
 
-import domain.User;
+import domain.*;
 import java.sql.*;
 
 public class UserDAO {
@@ -70,8 +70,8 @@ public class UserDAO {
                     rs.getDate("birthday"),
                     rs.getTimestamp("created_at"),
                     rs.getString("fullName"),
-                    rs.getString("gender"),
-                    rs.getString("password") // Sử dụng constructor mới
+                    rs.getString("gender")
+//                    rs.getString("password") // Sử dụng constructor mới
                 );
                 System.out.println("UserDAO.getUserByEmail - Email: " + email + ", Password: " + user.getPassword());
                 return user;
@@ -98,6 +98,7 @@ public class UserDAO {
         }
         return false;
     }
+    
      public boolean updatePassword(String email, String newPassword) {
         String sql = "UPDATE users SET password = ? WHERE email = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -112,4 +113,33 @@ public class UserDAO {
             return false;
         }
     }
+     
+     public int BusinessRegistration(BusinessRegistration reg) throws SQLException {
+    String sql = "INSERT INTO business_registration (user_id, company_name, head_office, business_type, custom_type, rep_full_name, rep_position, rep_phone, rep_email, legal_document, file_name, file_path, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        ps.setInt(1, reg.getUserId());
+        ps.setString(2, reg.getCompanyName());
+        ps.setString(3, reg.getHeadOffice());
+        ps.setString(4, reg.getBusinessType());
+        ps.setString(5, reg.getCustomType());
+        ps.setString(6, reg.getRepFullName());
+        ps.setString(7, reg.getRepPosition());
+        ps.setString(8, reg.getRepPhone());
+        ps.setString(9, reg.getRepEmail());
+        ps.setString(10, reg.getLegalDocument());
+        ps.setString(11, reg.getFileName());
+        ps.setString(12, reg.getFilePath());
+        ps.setString(13, reg.getStatus());
+        int rows = ps.executeUpdate();
+        if (rows > 0) {
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+    }
+    return -1;
+}
+
 }

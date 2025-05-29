@@ -4,8 +4,8 @@
  */
 package controller.login;
 
-import dal.UserDAO;
-import domain.User;
+import dal.*;
+import domain.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,6 +14,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.annotation.MultipartConfig;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,6 +24,7 @@ import java.util.*;
  *
  * @author trvie
  */
+@MultipartConfig
 @WebServlet(name = "AccountServlet", urlPatterns = {"/Account"})
 public class AccountServlet extends HttpServlet {
 
@@ -155,68 +158,161 @@ public class AccountServlet extends HttpServlet {
             response.sendRedirect("login.jsp");
             return;
         }
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "";
+        } else if (action.equals("editProfile")) {
 
-        String fullName = request.getParameter("fullName");
-        String gender = request.getParameter("gender");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
-        String birthdayStr = request.getParameter("birthday");
+            String fullName = request.getParameter("fullName");
+            String gender = request.getParameter("gender");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+            String birthdayStr = request.getParameter("birthday");
 
-        Map<String, String> errors = new HashMap<>();
+            Map<String, String> errors = new HashMap<>();
 
-        errors.putAll(validateFullName(fullName));
-        errors.putAll(validateGender(gender));
-        errors.putAll(validatePhone(phone));
-        errors.putAll(validateAddress(address));
-        errors.putAll(validateBirthday(birthdayStr));
+            errors.putAll(validateFullName(fullName));
+            errors.putAll(validateGender(gender));
+            errors.putAll(validatePhone(phone));
+            errors.putAll(validateAddress(address));
+            errors.putAll(validateBirthday(birthdayStr));
 
-        java.sql.Date birthday = null;
-        if (!errors.containsKey("birthdayError")) {
-            try {
-                java.util.Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(birthdayStr);
-                birthday = new java.sql.Date(parsedDate.getTime());
-            } catch (ParseException e) {
-                errors.put("birthdayError", "Ngày sinh không hợp lệ");
+            java.sql.Date birthday = null;
+            if (!errors.containsKey("birthdayError")) {
+                try {
+                    java.util.Date parsedDate = new SimpleDateFormat("yyyy-MM-dd").parse(birthdayStr);
+                    birthday = new java.sql.Date(parsedDate.getTime());
+                } catch (ParseException e) {
+                    errors.put("birthdayError", "Ngày sinh không hợp lệ");
+                }
             }
-        }
 
-        if (!errors.isEmpty()) {
-            request.setAttribute("errors", errors);
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
 
-            User tempUser = new User();
-            tempUser.setFullName(fullName);
-            tempUser.setGender(gender);
-            tempUser.setPhone(phone);
-            tempUser.setAddress(address);
-            tempUser.setBirthday(birthday);
+                User tempUser = new User();
+                tempUser.setFullName(fullName);
+                tempUser.setGender(gender);
+                tempUser.setPhone(phone);
+                tempUser.setAddress(address);
+                tempUser.setBirthday(birthday);
 
-            request.setAttribute("user", user);
-            request.getRequestDispatcher("editprofile.jsp").forward(request, response);
-            return;
-        }
-        try {
-            UserDAO userDAO = new UserDAO();
-            user.setFullName(fullName);
-            user.setGender(gender);
-            user.setPhone(phone);
-            user.setAddress(address);
-            user.setBirthday(birthday);
+                request.setAttribute("user", user);
+                request.getRequestDispatcher("editprofile.jsp").forward(request, response);
+                return;
+            }
+            try {
+                UserDAO userDAO = new UserDAO();
+                user.setFullName(fullName);
+                user.setGender(gender);
+                user.setPhone(phone);
+                user.setAddress(address);
+                user.setBirthday(birthday);
 
-            boolean updated = userDAO.updateUserProfile(user);
+                boolean updated = userDAO.updateUserProfile(user);
 
-            if (updated) {
-                session.setAttribute("user", user);
-                response.sendRedirect("profile.jsp?msg=success");
-            } else {
-                errors.put("generalError", "Cập nhật không thành công");
+                if (updated) {
+                    session.setAttribute("user", user);
+                    response.sendRedirect("profile.jsp?msg=success");
+                } else {
+                    errors.put("generalError", "Cập nhật không thành công");
+                    request.setAttribute("errors", errors);
+                    request.getRequestDispatcher("editprofile.jsp").forward(request, response);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                errors.put("generalError", "Lỗi hệ thống, vui lòng thử lại");
                 request.setAttribute("errors", errors);
                 request.getRequestDispatcher("editprofile.jsp").forward(request, response);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            errors.put("generalError", "Lỗi hệ thống, vui lòng thử lại");
-            request.setAttribute("errors", errors);
-            request.getRequestDispatcher("editprofile.jsp").forward(request, response);
+        } else if (action.equals("registerBusiness")) {
+            String companyName = request.getParameter("companyName");
+            String headquarters = request.getParameter("headquarters");
+            String businessType = request.getParameter("businessType");
+            String customType = request.getParameter("customType");
+            String repFullName = request.getParameter("repName");
+            String repPosition = request.getParameter("repPosition");
+            String repPhone = request.getParameter("repPhone");
+            String repEmail = request.getParameter("repEmail");
+
+            Map<String, String> errors = new HashMap<>();
+            // Validate
+            if (companyName == null || companyName.trim().isEmpty()) {
+                errors.put("companyNameError", "Tên doanh nghiệp không được để trống");
+            }
+            if (headquarters == null || headquarters.trim().isEmpty()) {
+                errors.put("headquartersError", "Địa chỉ trụ sở chính không được để trống");
+            }
+            if (businessType == null || businessType.trim().isEmpty()) {
+                errors.put("businessTypeError", "Bạn phải chọn loại hình doanh nghiệp");
+            }
+            if ("Khác".equals(businessType) && (customType == null || customType.trim().isEmpty())) {
+                errors.put("customTypeError", "Hãy nhập loại hình doanh nghiệp khác");
+            }
+            if (repFullName == null || repFullName.trim().isEmpty()) {
+                errors.put("repFullNameError", "Tên người đại diện không được để trống");
+            }
+            if (repPosition == null || repPosition.trim().isEmpty()) {
+                errors.put("repPositionError", "Chức vụ không được để trống");
+            }
+            if (repPhone == null || !repPhone.matches("^0\\d{8,10}$")) {
+                errors.put("repPhoneError", "Số điện thoại người đại diện không hợp lệ");
+            }
+            if (repEmail == null || !repEmail.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+                errors.put("repEmailError", "Email người đại diện không hợp lệ");
+            }
+
+            // Xử lý file upload (legalDoc)
+            jakarta.servlet.http.Part legalDocPart = request.getPart("legalDoc");
+            String fileName = (legalDocPart != null) ? legalDocPart.getSubmittedFileName() : null;
+            String uploadDirPath = getServletContext().getRealPath("") + File.separator + "uploads";
+            File uploadDir = new File(uploadDirPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+            String filePath = null;
+            if (fileName != null && !fileName.isEmpty()) {
+                filePath = "uploads" + File.separator + fileName;
+                legalDocPart.write(uploadDirPath + File.separator + fileName);
+            }
+
+            // Gọi DAO để insert (bạn cần tạo class BusinessRegistration và method insertBusinessRegistration tương ứng)
+            try {
+                BusinessRegistration reg = new BusinessRegistration();
+                reg.setUserId(user.getId());
+                reg.setCompanyName(companyName);
+                reg.setHeadOffice(headquarters);
+                reg.setBusinessType(businessType);
+                reg.setCustomType(customType);
+                reg.setRepFullName(repFullName);
+                reg.setRepPosition(repPosition);
+                reg.setRepPhone(repPhone);
+                reg.setRepEmail(repEmail);
+                reg.setLegalDocument(fileName);
+                reg.setFileName(fileName);
+                reg.setFilePath(filePath);
+                reg.setStatus("pending"); // default
+                // Insert
+                UserDAO dao = new UserDAO();
+                int regId = dao.BusinessRegistration(reg);
+                // Thành công
+                response.sendRedirect("profile.jsp?msg=business_success");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", "Có lỗi khi đăng ký doanh nghiệp, vui lòng thử lại.");
+                request.setAttribute("errors", errors);
+                
+                request.setAttribute("companyName", companyName);
+                request.setAttribute("headquarters", headquarters);
+                request.setAttribute("businessType", businessType);
+                request.setAttribute("customType", customType);
+                request.setAttribute("repFullName", repFullName);
+                request.setAttribute("repPosition", repPosition);
+                request.setAttribute("repPhone", repPhone);
+                request.setAttribute("repEmail", repEmail);
+
+                request.getRequestDispatcher("register-business.jsp").forward(request, response);
+            }
         }
     }
 
