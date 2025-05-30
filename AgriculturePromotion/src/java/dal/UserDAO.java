@@ -112,4 +112,49 @@ public class UserDAO {
             return false;
         }
     }
+     public boolean saveResetRequest(String email, String otp) {
+        String sql = "INSERT INTO password_resets (email, otp, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE))";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, otp);
+            int rows = ps.executeUpdate();
+            System.out.println("UserDAO.saveResetRequest - Email: " + email + ", OTP: " + otp + ", Rows: " + rows);
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println("SQLException trong saveResetRequest: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean verifyOtp(String email, String otp) {
+        String sql = "SELECT COUNT(*) FROM password_resets WHERE email = ? AND otp = ? AND expires_at > NOW()";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, otp);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                // Xóa bản ghi sau khi xác minh thành công
+                deleteResetRequest(email, otp);
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            System.err.println("SQLException trong verifyOtp: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void deleteResetRequest(String email, String otp) {
+        String sql = "DELETE FROM password_resets WHERE email = ? AND otp = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, otp);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("SQLException trong deleteResetRequest: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

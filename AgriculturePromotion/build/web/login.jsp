@@ -102,6 +102,9 @@
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="forgot-password">
+        <a href="forgotpassword.jsp">Quên mật khẩu?</a>
+    </div>
                     <div class="g-recaptcha mt-2" data-sitekey="6LcboUErAAAAAGZkSfxj-9fL7Z7FgeyP-DsULZ3b"></div>
                     <p id="errorCaptcha" class="text-danger text-center mt-2"></p>
                 </div>

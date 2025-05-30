@@ -14,7 +14,8 @@ public class User {
     private Timestamp createdAt;
     private String fullName; // Added
     private String gender;   // Added
-     private String password;
+    private String password;
+    private String picture;
 
     public User() {
     }
@@ -31,7 +32,7 @@ public class User {
         this.gender = gender;
         this.password = password;
     }
-    
+
     public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt, String fullName, String gender) {
         this.id = id;
         this.email = email;
@@ -44,6 +45,20 @@ public class User {
         this.gender = gender;
     }
 
+    public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt, String fullName, String gender, String password, String picture) {
+        this.id = id;
+        this.email = email;
+        this.role = role;
+        this.phone = phone;
+        this.address = address;
+        this.birthday = birthday;
+        this.createdAt = createdAt;
+        this.fullName = fullName;
+        this.gender = gender;
+        this.password = password;
+        this.picture = picture;
+    }
+
     // Getters and setters
     public int getId() {
         return id;
@@ -52,7 +67,7 @@ public class User {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getEmail() {
         return email;
     }
@@ -124,5 +139,13 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
 }

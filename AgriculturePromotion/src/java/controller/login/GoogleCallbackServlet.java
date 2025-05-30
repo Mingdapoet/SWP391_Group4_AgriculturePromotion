@@ -49,8 +49,9 @@ public class GoogleCallbackServlet extends HttpServlet {
             // Get user information
             String email = payload.getEmail();
             String name = (String) payload.get("name");
+            String picture = (String) payload.get("picture"); // URL ảnh đại diện (nếu có)
 
-            // Check if user exists in database or register new user
+            // Check if user exists in database
             UserDAO dao = new UserDAO();
             User user = dao.getUserByEmail(email);
             if (user == null) {
@@ -72,6 +73,12 @@ public class GoogleCallbackServlet extends HttpServlet {
                     return;
                 }
                 user = dao.getUserByEmail(email);
+            } else {
+                // Cập nhật thông tin (nếu cần)
+                if (name != null && (user.getFullName() == null || user.getFullName().isEmpty())) {
+                    dao.updateUserProfile(new User(user.getId(), email, user.getRole(), user.getPhone(), user.getAddress(), user.getBirthday(), user.getCreatedAt(), name, user.getGender(), user.getPassword()));
+                    user.setFullName(name);
+                }
             }
 
             request.getSession().setAttribute("user", user);
