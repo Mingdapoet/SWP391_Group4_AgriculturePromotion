@@ -11,6 +11,9 @@
     if (msg == null) {
         msg = "";
     }
+    String avatarPath = user.getAvatar();
+    String defaultAvatar = "img/default-avatar.jpg";
+    String displayAvatar = (avatarPath == null || avatarPath.trim().isEmpty()) ? defaultAvatar : avatarPath;
 %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -265,27 +268,41 @@
                     <div class="sidebar">
                         <h4>Menu</h4>
                         <a href="profile.jsp" class="sidebar-link">Thông tin cá nhân</a>
+                        <% 
+                            String role = user.getRole();
+                            if ("customer".equals(role) || "business".equals(role)) { 
+                        %>
                         <a href="#" class="sidebar-link" onclick="toggleBusinessDropdown(); return false;">
                             Đăng ký doanh nghiệp <span style="font-size:0.8em;">▼</span>
                         </a>
                         <div id="business-dropdown" style="display: none; margin-left: 16px;">
                             <a href="register-business.jsp" class="sidebar-link">Viết đơn</a>
-                            <a href="register-business-list.jsp" class="sidebar-link">Xem danh sách đơn</a>
+                            <a href="Account?action=listBusiness" class="sidebar-link">Xem danh sách đơn</a>
                         </div>
+                        <% } %>
                     </div>
                 </div>
+
                 <div class="col-md-9 center-content">
                     <div class="profile-card w-100" style="max-width: 500px;">
                         <% if ("success".equals(msg)) { %>
-                        <div class="alert alert-success">Cập nhật thông tin thành công!</div>
+                        <div class="alert alert-success" id="success-alert">Cập nhật thông tin thành công!</div>
                         <% } else if ("business_success".equals(msg)) { %>
-                        <div class="alert alert-success">Đăng ký doanh nghiệp thành công!</div>
+                        <div class="alert alert-success" id="success-alert">Đăng ký doanh nghiệp thành công!</div>
                         <% } %>
 
-                        <div class="profile-title mb-3">
-                            <%= user.getFullName() != null ? user.getFullName() : "Chưa cập nhật" %>
+
+                        <div class="d-flex flex-column align-items-center mb-3">
+                            <div style="width: 112px; height: 112px; border-radius: 50%; overflow: hidden; box-shadow: 0 2px 8px #ccc;">
+                                <img src="<%= user.getAvatar() != null && !user.getAvatar().isEmpty() ? user.getAvatar() : "img/default-avatar.jpg" %>" 
+                                     alt="Avatar" style="width:112px;height:112px;object-fit:cover;">
+                            </div>
                         </div>
                         <table class="table profile-table">
+                            <tr>
+                                <th>Họ tên</th>
+                                <td><%= user.getFullName() != null ? user.getFullName() : "Chưa cập nhật" %></td>
+                            </tr>
                             <tr>
                                 <th>Giới tính</th>
                                 <td><%= user.getGender() != null ? user.getGender() : "Chưa cập nhật" %></td>

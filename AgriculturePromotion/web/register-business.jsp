@@ -1,11 +1,13 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="domain.User" %>
+<%@ page import="java.util.Map" %>
 <%
     User user = (User) session.getAttribute("user");
     if (user == null) {
         response.sendRedirect("login.jsp");
         return;
     }
+    Map<String, String> errors = (Map<String, String>) request.getAttribute("errors");
 %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -283,69 +285,175 @@
                     <div class="sidebar">
                         <h4>Menu</h4>
                         <a href="profile.jsp" class="sidebar-link">Thông tin cá nhân</a>
+                        <% 
+                            String role = user.getRole();
+                            if ("customer".equals(role) || "business".equals(role)) { 
+                        %>
                         <a href="#" class="sidebar-link" onclick="toggleBusinessDropdown(); return false;">
                             Đăng ký doanh nghiệp <span style="font-size:0.8em;">▼</span>
                         </a>
                         <div id="business-dropdown" style="display: none; margin-left: 16px;">
                             <a href="register-business.jsp" class="sidebar-link">Viết đơn</a>
-                            <a href="register-business-list.jsp" class="sidebar-link">Xem danh sách đơn</a>
+                            <a href="Account?action=listBusiness" class="sidebar-link">Xem danh sách đơn</a>
                         </div>
+                        <% } %>
                     </div>
                 </div>
+
                 <!-- Form đăng ký doanh nghiệp -->
                 <div class="col-md-9 d-flex justify-content-center">
                     <form class="form-container" method="post" action="Account" enctype="multipart/form-data">
                         <input type="hidden" name="action" value="registerBusiness">
-                        <h5>1 Thông tin doanh nghiệp</h5>
-                        <div class="form-group">
-                            <label for="companyName">Tên doanh nghiệp</label>
-                            <input type="text" id="companyName" name="companyName" required>
+                        <h5>1. Thông tin doanh nghiệp</h5>
+
+                        <!-- Tên doanh nghiệp -->
+                        <div class="mb-3">
+                            <label for="companyName" class="form-label">Tên doanh nghiệp *</label>
+                            <input type="text" class="form-control<%= errors != null && errors.get("companyNameError") != null ? " is-invalid" : "" %>"
+                                   id="companyName" name="companyName"
+                                   value="<%= request.getAttribute("companyName") == null ? "" : request.getAttribute("companyName") %>"  >
+                            <% if (errors != null && errors.get("companyNameError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("companyNameError") %></div>
+                            <% } %>
                         </div>
-                        <div class="form-group">
-                            <label for="headquarters">Địa chỉ trụ sở chính</label>
-                            <input type="text" id="headquarters" name="headquarters" required>
+
+                        <!-- Mã số thuế -->
+                        <div class="mb-3">
+                            <label for="taxCode" class="form-label">Mã số thuế *</label>
+                            <input type="text" class="form-control<%= errors != null && errors.get("taxCodeError") != null ? " is-invalid" : "" %>"
+                                   id="taxCode" name="taxCode"
+                                   value="<%= request.getAttribute("taxCode") == null ? "" : request.getAttribute("taxCode") %>"  >
+                            <% if (errors != null && errors.get("taxCodeError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("taxCodeError") %></div>
+                            <% } %>
                         </div>
-                        <div class="form-group">
-                            <label for="businessType">Loại hình doanh nghiệp</label>
-                            <select id="businessType" name="businessType" required onchange="toggleCustomType()">
-                                <option value="" selected>-- Chọn loại hình --</option>
-                                <option value="TNHH">Công ty TNHH</option>
-                                <option value="CP">Công ty Cổ phần</option>
-                                <option value="TN">Doanh nghiệp tư nhân</option>
-                                <option value="HTX">Hợp tác xã</option>
-                                <option value="Khác">Khác</option>
+
+                        <!-- Địa chỉ trụ sở chính -->
+                        <div class="mb-3">
+                            <label for="headquarters" class="form-label">Địa chỉ trụ sở chính *</label>
+                            <input type="text" class="form-control<%= errors != null && errors.get("headquartersError") != null ? " is-invalid" : "" %>"
+                                   id="headquarters" name="headquarters"
+                                   value="<%= request.getAttribute("headquarters") == null ? "" : request.getAttribute("headquarters") %>"  >
+                            <% if (errors != null && errors.get("headquartersError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("headquartersError") %></div>
+                            <% } %>
+                        </div>
+
+                        <!-- Loại hình doanh nghiệp -->
+                        <div class="mb-3">
+                            <label for="businessType" class="form-label">Loại hình doanh nghiệp *</label>
+                            <select class="form-select<%= errors != null && errors.get("businessTypeError") != null ? " is-invalid" : "" %>"
+                                    id="businessType" name="businessType" onchange="toggleCustomType()"  >
+                                <option value="" <%= (request.getAttribute("businessType") == null || "".equals(request.getAttribute("businessType"))) ? "selected" : "" %>>-- Chọn loại hình --</option>
+                                <option value="TNHH" <%= "TNHH".equals(request.getAttribute("businessType")) ? "selected" : "" %>>Công ty TNHH</option>
+                                <option value="CP" <%= "CP".equals(request.getAttribute("businessType")) ? "selected" : "" %>>Công ty Cổ phần</option>
+                                <option value="TN" <%= "TN".equals(request.getAttribute("businessType")) ? "selected" : "" %>>Doanh nghiệp tư nhân</option>
+                                <option value="HTX" <%= "HTX".equals(request.getAttribute("businessType")) ? "selected" : "" %>>Hợp tác xã</option>
+                                <option value="Khác" <%= "Khác".equals(request.getAttribute("businessType")) ? "selected" : "" %>>Khác</option>
                             </select>
+                            <% if (errors != null && errors.get("businessTypeError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("businessTypeError") %></div>
+                            <% } %>
                         </div>
-                        <div class="form-group" id="customTypeWrapper" style="display:none;">
-                            <label for="customType">Nhập loại hình khác</label>
-                            <input type="text" id="customType" name="customType" class="form-control" placeholder="Nhập loại hình khác...">
+                        <!-- Nếu chọn Khác thì show input -->
+                        <div class="mb-3" id="customTypeWrapper" style="<%= "Khác".equals(request.getAttribute("businessType")) ? "display:block;" : "display:none;" %>">
+                            <label for="customType" class="form-label">Nhập loại hình khác</label>
+                            <input type="text" class="form-control<%= errors != null && errors.get("customTypeError") != null ? " is-invalid" : "" %>"
+                                   id="customType" name="customType"
+                                   value="<%= request.getAttribute("customType") == null ? "" : request.getAttribute("customType") %>">
+                            <% if (errors != null && errors.get("customTypeError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("customTypeError") %></div>
+                            <% } %>
                         </div>
 
+                        <!-- Email doanh nghiệp -->
+                        <div class="mb-3">
+                            <label for="companyEmail" class="form-label">Email doanh nghiệp *</label>
+                            <input type="email" class="form-control<%= errors != null && errors.get("companyEmailError") != null ? " is-invalid" : "" %>"
+                                   id="companyEmail" name="companyEmail"
+                                   value="<%= request.getAttribute("companyEmail") == null ? "" : request.getAttribute("companyEmail") %>"  >
+                            <% if (errors != null && errors.get("companyEmailError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("companyEmailError") %></div>
+                            <% } %>
+                        </div>
 
-                        <h5>2 Thông tin người đại diện pháp luật</h5>
-                        <div class="form-group">
-                            <label for="repName">Họ và tên</label>
-                            <input type="text" id="repName" name="repName" required>
+                        <!-- Số điện thoại doanh nghiệp -->
+                        <div class="mb-3">
+                            <label for="companyPhone" class="form-label">Số điện thoại doanh nghiệp *</label>
+                            <input type="tel" class="form-control<%= errors != null && errors.get("companyPhoneError") != null ? " is-invalid" : "" %>"
+                                   id="companyPhone" name="companyPhone"
+                                   value="<%= request.getAttribute("companyPhone") == null ? "" : request.getAttribute("companyPhone") %>"  >
+                            <% if (errors != null && errors.get("companyPhoneError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("companyPhoneError") %></div>
+                            <% } %>
                         </div>
-                        <div class="form-group">
-                            <label for="repPosition">Chức vụ</label>
-                            <input type="text" id="repPosition" name="repPosition" required>
+
+                        <h5>2. Thông tin người đại diện pháp luật</h5>
+
+                        <!-- Họ và tên đại diện -->
+                        <div class="mb-3">
+                            <label for="repFullName" class="form-label">Họ và tên *</label>
+                            <input type="text" class="form-control<%= errors != null && errors.get("repFullNameError") != null ? " is-invalid" : "" %>"
+                                   id="repFullName" name="repFullName"
+                                   value="<%= request.getAttribute("repFullName") == null ? "" : request.getAttribute("repFullName") %>"  >
+                            <% if (errors != null && errors.get("repFullNameError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("repFullNameError") %></div>
+                            <% } %>
                         </div>
-                        <div class="form-group">
-                            <label for="repPhone">Số điện thoại</label>
-                            <input type="tel" id="repPhone" name="repPhone" required>
+
+                        <!-- Chức vụ -->
+                        <div class="mb-3">
+                            <label for="repPosition" class="form-label">Chức vụ *</label>
+                            <input type="text" class="form-control<%= errors != null && errors.get("repPositionError") != null ? " is-invalid" : "" %>"
+                                   id="repPosition" name="repPosition"
+                                   value="<%= request.getAttribute("repPosition") == null ? "" : request.getAttribute("repPosition") %>"  >
+                            <% if (errors != null && errors.get("repPositionError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("repPositionError") %></div>
+                            <% } %>
                         </div>
-                        <div class="form-group">
-                            <label for="repEmail">Email</label>
-                            <input type="email" id="repEmail" name="repEmail" required>
+
+                        <!-- Số điện thoại đại diện -->
+                        <div class="mb-3">
+                            <label for="repPhone" class="form-label">Số điện thoại *</label>
+                            <input type="tel" class="form-control<%= errors != null && errors.get("repPhoneError") != null ? " is-invalid" : "" %>"
+                                   id="repPhone" name="repPhone"
+                                   value="<%= request.getAttribute("repPhone") == null ? "" : request.getAttribute("repPhone") %>"  >
+                            <% if (errors != null && errors.get("repPhoneError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("repPhoneError") %></div>
+                            <% } %>
                         </div>
-                        <div class="form-group">
-                            <label for="legalDoc">Giấy chứng nhận đăng ký kinh doanh</label>
-                            <input type="file" id="legalDoc" name="legalDoc" accept=".pdf,.doc,.docx">
+
+                        <!-- Email đại diện -->
+                        <div class="mb-3">
+                            <label for="repEmail" class="form-label">Email *</label>
+                            <input type="email" class="form-control<%= errors != null && errors.get("repEmailError") != null ? " is-invalid" : "" %>"
+                                   id="repEmail" name="repEmail"
+                                   value="<%= request.getAttribute("repEmail") == null ? "" : request.getAttribute("repEmail") %>"  >
+                            <% if (errors != null && errors.get("repEmailError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("repEmailError") %></div>
+                            <% } %>
                         </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="commitment" name="commitment" required>
-                            <label for="commitment">Cam kết</label>
+
+                        <!-- File giấy phép -->
+                        <div class="mb-3">
+                            <label for="legalDoc" class="form-label">Giấy chứng nhận đăng ký kinh doanh</label>
+                            <input type="file" class="form-control<%= errors != null && errors.get("legalDocError") != null ? " is-invalid" : "" %>"
+                                   id="legalDoc" name="legalDoc" accept=".pdf,.doc,.docx">
+                            <% if (errors != null && errors.get("legalDocError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("legalDocError") %></div>
+                            <% } %>
+                        </div>
+
+                        <!-- Cam kết -->
+                        <div class="mb-3 checkbox-group">
+                            <input type="checkbox" class="form-check-input<%= errors != null && errors.get("commitmentError") != null ? " is-invalid" : "" %>"
+                                   id="commitment" name="commitment"  >
+                            <label class="form-check-label" for="commitment">
+                                Tôi cam kết thông tin đã khai là chính xác và chịu trách nhiệm trước pháp luật
+                            </label>
+                            <% if (errors != null && errors.get("commitmentError") != null) { %>
+                            <div class="invalid-feedback d-block"><%= errors.get("commitmentError") %></div>
+                            <% } %>
                         </div>
                         <button type="submit" class="submit-btn">Gửi đơn</button>
                     </form>
@@ -357,15 +465,18 @@
                 const selected = document.getElementById("businessType").value;
                 const wrapper = document.getElementById("customTypeWrapper");
                 const input = document.getElementById("customType");
-
                 if (selected === "Khác") {
-                    wrapper.style.display = "flex";
+                    wrapper.style.display = "block";
                 } else {
                     wrapper.style.display = "none";
                     input.value = "";
                 }
             }
+            window.onload = function () {
+                toggleCustomType();
+            };
         </script>
+
         <script>
             function toggleBusinessDropdown() {
                 var dropdown = document.getElementById("business-dropdown");

@@ -1,39 +1,37 @@
+<%-- 
+    Document   : register-business-list
+    Created on : May 30, 2025, 3:02:12 AM
+    Author     : trvie
+--%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="domain.User" %>
+<%@ page import="domain.*" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%
     User user = (User) session.getAttribute("user");
     if (user == null) {
         response.sendRedirect("login.jsp");
         return;
     }
-    
-    String msg = request.getParameter("msg");
-    if (msg == null) {
-        msg = "";
-    }
-    String avatarPath = user.getAvatar();
-    String defaultAvatar = "img/default-avatar.jpg";
-    String displayAvatar = (avatarPath == null || avatarPath.trim().isEmpty()) ? defaultAvatar : avatarPath;
+    List<BusinessRegistration> registrations = (List<BusinessRegistration>) request.getAttribute("registrations");
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 %>
-<!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Thông tin cá nhân</title>
+        <title>Xem danh sách đơn</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <style>
             body {
                 font-family: 'Roboto', sans-serif;
-                background-color: #f5f5f5;
+                background-color: #f7fef9;
                 color: #333;
-                line-height: 1.6;
                 margin: 0;
                 min-height: 100vh;
-                background: #f7fef9;
                 display: flex;
                 flex-direction: column;
-                justify-content: flex-start; /* Đẩy nội dung lên trên */
             }
             /* Header Top (White Background) */
             .header-top {
@@ -85,7 +83,6 @@
             .nav-item.dropdown::marker {
                 content: none !important;
             }
-
             /* Header Bottom (Green Background) */
             .header-bottom {
                 background: #2e7d32;
@@ -124,7 +121,7 @@
             .header-bottom .user-actions a:hover {
                 color: #a5d6a7;
             }
-
+            /* Sidebar */
             .sidebar {
                 background: #fff;
                 padding: 20px;
@@ -154,52 +151,16 @@
                 font-weight: normal;
                 font-size: 0.97em;
             }
-            .main-content-wrapper {
-                margin-left: 220px; /* để không bị sidebar che */
-                flex-grow: 1;
-                display: flex;
-                justify-content: center; /* căn giữa ngang */
-                align-items: flex-start; /* canh top */
-                padding: 40px 20px;
-                min-height: 100vh;
-            }
-            .profile-card {
-                max-width: 480px;
-                margin: 24px auto 16px auto;   /* Giảm top xuống 24px, bottom 16px */
-                padding: 24px 18px 18px 18px;  /* Thu nhỏ padding xung quanh */
-                background: #fff;
-                border-radius: 24px;
-                box-shadow: 0 4px 32px rgba(34,197,94,0.10), 0 1.5px 6px rgba(0,0,0,0.06);
-            }
-            .profile-title {
-                font-weight: bold;
-                font-size: 1.7rem;
-                color: #15803d;
-                text-align: center;
-            }
-            .profile-table th, .profile-table td {
-                font-size: 1rem;
-                vertical-align: middle;
-            }
-            .btn-genz {
-                border-radius: 999px;
-                font-weight: bold;
-                transition: 0.25s;
-                box-shadow: 0 2px 8px rgba(34,197,94,0.08);
-            }
-            .btn-genz:hover {
-                transform: translateY(-3px) scale(1.04);
-                opacity: 0.92;
-                box-shadow: 0 4px 18px rgba(34,197,94,0.17);
-            }
-            @media (min-width: 800px) {
-                .profile-card {
-                    margin-top: 48px;
-                }
-            }
             @media (max-width: 799px) {
-                .profile-card {
-                    margin-top: 16px;
+                .sidebar {
+                    height: auto;
+                    position: relative;
+                    top: 0;
+                    margin-bottom: 20px;
+                }
+                .form-container {
+                    margin: 20px 10px;
+                    padding: 20px 15px;
                 }
             }
         </style>
@@ -223,7 +184,6 @@
 
         <div class="header-bottom bg-success text-white py-2">
             <div class="container-fluid d-flex align-items-center position-relative">
-
                 <ul class="navbar-nav d-flex flex-row gap-4 mb-0 position-absolute start-50 translate-middle-x">
                     <li class="nav-item">
                         <a class="nav-link text-white" href="${pageContext.request.contextPath}/index.jsp">Trang chủ</a>
@@ -283,75 +243,77 @@
                     </div>
                 </div>
 
-                <div class="col-md-9 center-content">
-                    <div class="profile-card w-100" style="max-width: 500px;">
-                        <% if ("success".equals(msg)) { %>
-                        <div class="alert alert-success" id="success-alert">Cập nhật thông tin thành công!</div>
-                        <% } else if ("business_success".equals(msg)) { %>
-                        <div class="alert alert-success" id="success-alert">Đăng ký doanh nghiệp thành công!</div>
-                        <% } %>
-
-
-                        <div class="d-flex flex-column align-items-center mb-3">
-                            <div style="width: 112px; height: 112px; border-radius: 50%; overflow: hidden; box-shadow: 0 2px 8px #ccc;">
-                                <img src="<%= user.getAvatar() != null && !user.getAvatar().isEmpty() ? user.getAvatar() : "img/default-avatar.jpg" %>" 
-                                     alt="Avatar" style="width:112px;height:112px;object-fit:cover;">
-                            </div>
-                        </div>
-                        <table class="table profile-table">
-                            <tr>
-                                <th>Họ tên</th>
-                                <td><%= user.getFullName() != null ? user.getFullName() : "Chưa cập nhật" %></td>
-                            </tr>
-                            <tr>
-                                <th>Giới tính</th>
-                                <td><%= user.getGender() != null ? user.getGender() : "Chưa cập nhật" %></td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td><%= user.getEmail() %></td>
-                            </tr>
-                            <tr>
-                                <th>Số điện thoại</th>
-                                <td><%= user.getPhone() != null ? user.getPhone() : "Chưa cập nhật" %></td>
-                            </tr>
-                            <tr>
-                                <th>Địa chỉ</th>
-                                <td><%= user.getAddress() != null ? user.getAddress() : "Chưa cập nhật" %></td>
-                            </tr>
-                            <tr>
-                                <th>Ngày sinh</th>
-                                <td><%= user.getBirthday() != null ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(user.getBirthday()) : "Chưa cập nhật" %></td>
-                            </tr>
+            <!-- Danh sách đơn -->
+            <div class="col-md-9">
+                <div class="form-container">
+                    <h5>Danh sách đơn đăng ký doanh nghiệp đã gửi</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên công ty</th>
+                                    <th>Người đại diện</th>
+                                    <th>Ngày gửi</th>
+                                    <th>Trạng thái</th>
+                                    <th>Chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%
+                                    if (registrations == null || registrations.isEmpty()) {
+                                %>
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">Chưa có đơn nào.</td>
+                                </tr>
+                                <%
+                                    } else {
+                                        int stt = 1;
+                                        for (BusinessRegistration reg : registrations) {
+                                %>
+                                <tr>
+                                    <td><%= stt++ %></td>
+                                    <td><%= reg.getCompanyName() %></td>
+                                    <td><%= reg.getRepFullName() %></td>
+                                    <td><%= reg.getSubmittedAt() != null ? sdf.format(reg.getSubmittedAt()) : "" %></td>
+                                    <td>
+                                        <% String status = reg.getStatus();
+                                           String color = "text-secondary";
+                                           if ("pending".equalsIgnoreCase(status)) color = "text-warning";
+                                           else if ("approved".equalsIgnoreCase(status)) color = "text-success";
+                                           else if ("rejected".equalsIgnoreCase(status)) color = "text-danger";
+                                        %>
+                                        <span class="<%= color %> fw-bold">
+                                            <%= "pending".equals(status) ? "Đang chờ duyệt"
+                                                    : "approved".equals(status) ? "Đã duyệt"
+                                                    : "rejected".equals(status) ? "Từ chối"
+                                                    : status %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="Account?action=detailBusiness&id=<%= reg.getId() %>" class="btn btn-outline-success btn-sm">
+                                            Xem chi tiết
+                                        </a>
+                                    </td>
+                                </tr>
+                                <%
+                                        }
+                                    }
+                                %>
+                            </tbody>
                         </table>
-                        <div class="d-flex justify-content-between gap-2 mt-3">
-                            <a href="editprofile.jsp" class="btn btn-success btn-genz w-50">✏️ Chỉnh sửa</a>
-                            <a href="index.jsp" class="btn btn-outline-primary btn-genz w-50">🏡 Trang chủ</a>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <script>
+        function toggleBusinessDropdown() {
+            var dropdown = document.getElementById("business-dropdown");
+            dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+        }
+    </script>
 
-        <script>
-            window.onload = function () {
-                var alertBox = document.getElementById('success-alert');
-                if (alertBox) {
-                    alertBox.style.display = 'block';
-                    setTimeout(function () {
-                        alertBox.style.display = 'none';
-                    }, 5000); // 5000ms = 5 second
-                }
-            };
-        </script>
-
-        <script>
-            function toggleBusinessDropdown() {
-                var dropdown = document.getElementById("business-dropdown");
-                dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
-            }
-        </script>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

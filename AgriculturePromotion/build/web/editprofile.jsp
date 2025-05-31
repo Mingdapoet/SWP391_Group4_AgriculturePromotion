@@ -76,8 +76,18 @@
             </div>
             <% } %>
 
-            <form action="Account" method="post">
+            <form action="Account" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="editProfile">
+                <div class="mb-3">
+                    <label for="avatar" class="form-label">Ảnh đại diện</label>
+                    <input type="file" class="form-control<%= errors != null && errors.get("avatarError") != null ? " is-invalid" : "" %>"
+                           id="avatar" name="avatar" accept=".jpg,.jpeg,.png,.gif">
+                    <% if (errors != null && errors.get("avatarError") != null) { %>
+                    <div class="invalid-feedback d-block"><%= errors.get("avatarError") %></div>
+                    <% } %>
+                </div>
+
+
                 <div class="mb-3">
                     <label for="fullName" class="form-label">Họ tên</label>
                     <input type="text" class="form-control" id="fullName" name="fullName"

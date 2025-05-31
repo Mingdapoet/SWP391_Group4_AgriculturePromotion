@@ -1,39 +1,31 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="domain.User" %>
+<%@ page import="domain.*" %>
+
 <%
     User user = (User) session.getAttribute("user");
     if (user == null) {
         response.sendRedirect("login.jsp");
         return;
     }
-    
-    String msg = request.getParameter("msg");
-    if (msg == null) {
-        msg = "";
-    }
-    String avatarPath = user.getAvatar();
-    String defaultAvatar = "img/default-avatar.jpg";
-    String displayAvatar = (avatarPath == null || avatarPath.trim().isEmpty()) ? defaultAvatar : avatarPath;
+    BusinessRegistration reg = (BusinessRegistration) request.getAttribute("registration");
 %>
+
 <!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Thông tin cá nhân</title>
+        <title>Xem chi tiết đơn</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <style>
             body {
                 font-family: 'Roboto', sans-serif;
-                background-color: #f5f5f5;
+                background-color: #f7fef9;
                 color: #333;
-                line-height: 1.6;
                 margin: 0;
                 min-height: 100vh;
-                background: #f7fef9;
                 display: flex;
                 flex-direction: column;
-                justify-content: flex-start; /* Đẩy nội dung lên trên */
             }
             /* Header Top (White Background) */
             .header-top {
@@ -85,7 +77,6 @@
             .nav-item.dropdown::marker {
                 content: none !important;
             }
-
             /* Header Bottom (Green Background) */
             .header-bottom {
                 background: #2e7d32;
@@ -124,7 +115,7 @@
             .header-bottom .user-actions a:hover {
                 color: #a5d6a7;
             }
-
+            /* Sidebar */
             .sidebar {
                 background: #fff;
                 padding: 20px;
@@ -154,52 +145,52 @@
                 font-weight: normal;
                 font-size: 0.97em;
             }
-            .main-content-wrapper {
-                margin-left: 220px; /* để không bị sidebar che */
-                flex-grow: 1;
-                display: flex;
-                justify-content: center; /* căn giữa ngang */
-                align-items: flex-start; /* canh top */
-                padding: 40px 20px;
-                min-height: 100vh;
-            }
-            .profile-card {
-                max-width: 480px;
-                margin: 24px auto 16px auto;   /* Giảm top xuống 24px, bottom 16px */
-                padding: 24px 18px 18px 18px;  /* Thu nhỏ padding xung quanh */
+
+            .detail-card {
                 background: #fff;
-                border-radius: 24px;
-                box-shadow: 0 4px 32px rgba(34,197,94,0.10), 0 1.5px 6px rgba(0,0,0,0.06);
+                border-radius: 20px;
+                box-shadow: 0 4px 18px rgb(34 197 94 / 12%);
+                padding: 32px 36px;
+                max-width: 700px;
+                margin: 28px auto;
+                border: 1px solid #15803d;
             }
-            .profile-title {
-                font-weight: bold;
-                font-size: 1.7rem;
+            .detail-title {
                 color: #15803d;
-                text-align: center;
+                font-weight: 700;
+                margin-bottom: 32px;
+                letter-spacing: 1px;
             }
-            .profile-table th, .profile-table td {
-                font-size: 1rem;
-                vertical-align: middle;
+            .detail-label {
+                font-weight: 500;
+                color: #555;
             }
-            .btn-genz {
-                border-radius: 999px;
-                font-weight: bold;
-                transition: 0.25s;
-                box-shadow: 0 2px 8px rgba(34,197,94,0.08);
+            .detail-value {
+                font-weight: 500;
+                color: #222;
             }
-            .btn-genz:hover {
-                transform: translateY(-3px) scale(1.04);
-                opacity: 0.92;
-                box-shadow: 0 4px 18px rgba(34,197,94,0.17);
+            .table-detail th, .table-detail td {
+                padding: 12px 14px;
+                border: none;
             }
-            @media (min-width: 800px) {
-                .profile-card {
-                    margin-top: 48px;
-                }
+            .file-preview {
+                margin: 10px 0 4px 0;
+            }
+            .back-btn {
+                border-radius: 18px;
+                padding: 6px 20px;
+                font-weight: 600;
             }
             @media (max-width: 799px) {
-                .profile-card {
-                    margin-top: 16px;
+                .sidebar {
+                    height: auto;
+                    position: relative;
+                    top: 0;
+                    margin-bottom: 20px;
+                }
+                .form-container {
+                    margin: 20px 10px;
+                    padding: 20px 15px;
                 }
             }
         </style>
@@ -223,7 +214,6 @@
 
         <div class="header-bottom bg-success text-white py-2">
             <div class="container-fluid d-flex align-items-center position-relative">
-
                 <ul class="navbar-nav d-flex flex-row gap-4 mb-0 position-absolute start-50 translate-middle-x">
                     <li class="nav-item">
                         <a class="nav-link text-white" href="${pageContext.request.contextPath}/index.jsp">Trang chủ</a>
@@ -283,68 +273,113 @@
                     </div>
                 </div>
 
-                <div class="col-md-9 center-content">
-                    <div class="profile-card w-100" style="max-width: 500px;">
-                        <% if ("success".equals(msg)) { %>
-                        <div class="alert alert-success" id="success-alert">Cập nhật thông tin thành công!</div>
-                        <% } else if ("business_success".equals(msg)) { %>
-                        <div class="alert alert-success" id="success-alert">Đăng ký doanh nghiệp thành công!</div>
-                        <% } %>
+                <!-- Nội dung chi tiết đơn -->
+                <div class="col-md-9">
+                    <div class="detail-card">
+                        <h2 class="detail-title">Chi tiết đơn đăng ký doanh nghiệp</h2>
+                        <% if (reg == null) { %>
+                        <div class="alert alert-danger">Không tìm thấy thông tin đơn!</div>
+                        <% } else { %>
+                        <table class="table table-borderless table-detail">
+                            <tr>
+                                <th class="detail-label">Trạng thái</th>
+                                <td>
+                                    <% String status = reg.getStatus(); %>
+                                    <% if ("pending".equals(status)) { %>
+                                    <span class="badge bg-warning text-dark">Đang chờ duyệt</span>
+                                    <% } else if ("approved".equals(status)) { %>
+                                    <span class="badge bg-success">Đã duyệt</span>
+                                    <% } else if ("rejected".equals(status)) { %>
+                                    <span class="badge bg-danger">Bị từ chối</span>
+                                    <% } else { %>
+                                    <span class="badge bg-secondary"><%= status %></span>
+                                    <% } %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label">Tên công ty</th>
+                                <td class="detail-value"><%= reg.getCompanyName() %></td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label">Mã số thuế</th>
+                                <td class="detail-value"><%= reg.getTaxCode() %></td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label">Loại hình doanh nghiệp</th>
+                                <td class="detail-value">
+                                    <%= reg.getBusinessType() %>
+                                    <% if ("Khác".equals(reg.getBusinessType()) && reg.getCustomType() != null) { %>
+                                    (<%= reg.getCustomType() %>)
+                                    <% } %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label">Email công ty</th>
+                                <td class="detail-value"><%= reg.getCompanyEmail() %></td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label">Số điện thoại công ty</th>
+                                <td class="detail-value"><%= reg.getCompanyPhone() %></td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label">Địa chỉ trụ sở</th>
+                                <td class="detail-value"><%= reg.getHeadOffice() %></td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label">Người đại diện</th>
+                                <td class="detail-value"><%= reg.getRepFullName() %></td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label">Chức vụ đại diện</th>
+                                <td class="detail-value"><%= reg.getRepPosition() %></td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label">SĐT đại diện</th>
+                                <td class="detail-value"><%= reg.getRepPhone() %></td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label">Email đại diện</th>
+                                <td class="detail-value"><%= reg.getRepEmail() %></td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label">Ngày gửi</th>
+                                <td class="detail-value"><%= reg.getSubmittedAt() %></td>
+                            </tr>
+
+                            <tr>
+                                <th class="detail-label">Giấy phép kinh doanh</th>
+                                <td>
+                                    <%
+                                        String filePath = reg.getFilePath();
+                                        String fileName = reg.getFileName();
+                                        String ext = "";
+                                        if (fileName != null && fileName.lastIndexOf(".") > 0) {
+                                            ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+                                        }
+                                    %>
+                                    <% if (filePath != null && (ext.equals("jpg") || ext.equals("jpeg") || ext.equals("png") || ext.equals("gif"))) { %>
+                                    <div class="file-preview">
+                                        <img src="<%= filePath %>" alt="Ảnh giấy phép" style="max-width:250px;max-height:320px;border:1px solid #ccc;border-radius:8px;">
+                                    </div>
+                                    <% } %>
+                                    <% if (filePath != null) { %>
+                                    <a href="<%= filePath %>" class="btn btn-outline-success btn-sm" target="_blank">Tải về / Xem file gốc</a>
+                                    <% } else { %>
+                                    <span class="text-danger">Không có file đính kèm</span>
+                                    <% } %>
+                                </td>
+                            </tr>
 
 
-                        <div class="d-flex flex-column align-items-center mb-3">
-                            <div style="width: 112px; height: 112px; border-radius: 50%; overflow: hidden; box-shadow: 0 2px 8px #ccc;">
-                                <img src="<%= user.getAvatar() != null && !user.getAvatar().isEmpty() ? user.getAvatar() : "img/default-avatar.jpg" %>" 
-                                     alt="Avatar" style="width:112px;height:112px;object-fit:cover;">
-                            </div>
-                        </div>
-                        <table class="table profile-table">
-                            <tr>
-                                <th>Họ tên</th>
-                                <td><%= user.getFullName() != null ? user.getFullName() : "Chưa cập nhật" %></td>
-                            </tr>
-                            <tr>
-                                <th>Giới tính</th>
-                                <td><%= user.getGender() != null ? user.getGender() : "Chưa cập nhật" %></td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td><%= user.getEmail() %></td>
-                            </tr>
-                            <tr>
-                                <th>Số điện thoại</th>
-                                <td><%= user.getPhone() != null ? user.getPhone() : "Chưa cập nhật" %></td>
-                            </tr>
-                            <tr>
-                                <th>Địa chỉ</th>
-                                <td><%= user.getAddress() != null ? user.getAddress() : "Chưa cập nhật" %></td>
-                            </tr>
-                            <tr>
-                                <th>Ngày sinh</th>
-                                <td><%= user.getBirthday() != null ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(user.getBirthday()) : "Chưa cập nhật" %></td>
-                            </tr>
                         </table>
-                        <div class="d-flex justify-content-between gap-2 mt-3">
-                            <a href="editprofile.jsp" class="btn btn-success btn-genz w-50">✏️ Chỉnh sửa</a>
-                            <a href="index.jsp" class="btn btn-outline-primary btn-genz w-50">🏡 Trang chủ</a>
+                        <div class="mt-3">
+                            <a href="Account?action=listBusiness" class="btn btn-secondary back-btn">← Quay lại danh sách</a>
                         </div>
+                        <% } %>
                     </div>
                 </div>
             </div>
         </div>
-
-        <script>
-            window.onload = function () {
-                var alertBox = document.getElementById('success-alert');
-                if (alertBox) {
-                    alertBox.style.display = 'block';
-                    setTimeout(function () {
-                        alertBox.style.display = 'none';
-                    }, 5000); // 5000ms = 5 second
-                }
-            };
-        </script>
-
         <script>
             function toggleBusinessDropdown() {
                 var dropdown = document.getElementById("business-dropdown");
@@ -354,4 +389,3 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
-</html>

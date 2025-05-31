@@ -11,9 +11,13 @@ import java.util.Date;
  * @author trvie
  */
 public class BusinessRegistration {
+
     private int id;
     private int userId;
     private String companyName;
+    private String taxCode;
+    private String companyEmail;
+    private String companyPhone;
     private String headOffice;
     private String businessType;
     private String customType;
@@ -30,10 +34,13 @@ public class BusinessRegistration {
     public BusinessRegistration() {
     }
 
-    public BusinessRegistration(int id, int userId, String companyName, String headOffice, String businessType, String customType, String repFullName, String repPosition, String repPhone, String repEmail, String legalDocument, String fileName, String filePath, String status, Date submittedAt) {
+    public BusinessRegistration(int id, int userId, String companyName, String taxCode, String companyEmail, String companyPhone, String headOffice, String businessType, String customType, String repFullName, String repPosition, String repPhone, String repEmail, String legalDocument, String fileName, String filePath, String status, Date submittedAt) {
         this.id = id;
         this.userId = userId;
         this.companyName = companyName;
+        this.taxCode = taxCode;
+        this.companyEmail = companyEmail;
+        this.companyPhone = companyPhone;
         this.headOffice = headOffice;
         this.businessType = businessType;
         this.customType = customType;
@@ -70,6 +77,30 @@ public class BusinessRegistration {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public String getTaxCode() {
+        return taxCode;
+    }
+
+    public void setTaxCode(String taxCode) {
+        this.taxCode = taxCode;
+    }
+
+    public String getCompanyEmail() {
+        return companyEmail;
+    }
+
+    public void setCompanyEmail(String companyEmail) {
+        this.companyEmail = companyEmail;
+    }
+
+    public String getCompanyPhone() {
+        return companyPhone;
+    }
+
+    public void setCompanyPhone(String companyPhone) {
+        this.companyPhone = companyPhone;
     }
 
     public String getHeadOffice() {
@@ -167,7 +198,5 @@ public class BusinessRegistration {
     public void setSubmittedAt(Date submittedAt) {
         this.submittedAt = submittedAt;
     }
-    
-    
-    
+
 }
