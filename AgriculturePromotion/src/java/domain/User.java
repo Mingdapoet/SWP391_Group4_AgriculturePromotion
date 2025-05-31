@@ -12,13 +12,16 @@ public class User {
     private String address;
     private Date birthday;
     private Timestamp createdAt;
-    private String fullName; // Added
-    private String gender;   // Added
+    private String fullName;
+    private String gender;
+    private boolean locked;           // Thêm trường locked
+    private Timestamp lastLogin;      // Thêm trường lastLogin
 
     public User() {
     }
 
-    public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt, String fullName, String gender) {
+    public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt,
+                String fullName, String gender, boolean locked, Timestamp lastLogin) {
         this.id = id;
         this.email = email;
         this.role = role;
@@ -28,9 +31,12 @@ public class User {
         this.createdAt = createdAt;
         this.fullName = fullName;
         this.gender = gender;
+        this.locked = locked;
+        this.lastLogin = lastLogin;
     }
 
-    // Getters and setters
+    // Getter và Setter
+
     public int getId() {
         return id;
     }
@@ -38,7 +44,7 @@ public class User {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getEmail() {
         return email;
     }
@@ -101,5 +107,21 @@ public class User {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public Timestamp getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Timestamp lastLogin) {
+        this.lastLogin = lastLogin;
     }
 }

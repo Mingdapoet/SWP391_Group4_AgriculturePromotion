@@ -1,14 +1,16 @@
 package dal;
 
-import domain.User;
+import domain.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO {
 
     private Connection conn;
 
     public UserDAO() throws Exception {
-        conn = new DBContext().getConnection(); // Assuming DBContext provides the connection
+        conn = new DBContext().getConnection();
     }
 
     public User login(String email, String password) {
@@ -26,8 +28,10 @@ public class UserDAO {
                         rs.getString("address"),
                         rs.getDate("birthday"),
                         rs.getTimestamp("created_at"),
-                        rs.getString("fullname"), // Added
-                        rs.getString("gender") // Added
+                        rs.getString("fullname"),
+                        rs.getString("gender"),
+                        rs.getBoolean("locked"),
+                        rs.getTimestamp("last_login")
                 );
             }
         } catch (SQLException e) {
@@ -45,8 +49,8 @@ public class UserDAO {
             ps.setString(4, phone);
             ps.setString(5, address);
             ps.setDate(6, birthday);
-            ps.setString(7, fullname); // Added
-            ps.setString(8, gender);   // Added
+            ps.setString(7, fullname);
+            ps.setString(8, gender);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -58,19 +62,21 @@ public class UserDAO {
         String sql = "SELECT * FROM users WHERE email = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    User user = new User();
-                    user.setId(rs.getInt("id"));
-                    user.setEmail(rs.getString("email"));
-                    user.setPhone(rs.getString("phone"));
-                    user.setAddress(rs.getString("address"));
-                    user.setBirthday(rs.getDate("birthday"));
-                    user.setCreatedAt(rs.getTimestamp("created_at"));
-                    user.setFullName(rs.getString("full_name"));
-                    user.setGender(rs.getString("gender"));
-                    return user;
-                }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("role"),
+                        rs.getString("phone"),
+                        rs.getString("address"),
+                        rs.getDate("birthday"),
+                        rs.getTimestamp("created_at"),
+                        rs.getString("fullname"),
+                        rs.getString("gender"),
+                        rs.getBoolean("locked"),
+                        rs.getTimestamp("last_login")
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -79,18 +85,356 @@ public class UserDAO {
     }
 
     public boolean updateUserProfile(User user) {
-        String sql = "UPDATE users SET phone = ?, address = ?, birthday = ?, fullname = ?, gender = ? WHERE id = ?";
+        String sql = "UPDATE users SET phone = ?, address = ?, birthday = ?, fullname = ?, gender = ?, locked = ?, last_login = ? WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getPhone());
             ps.setString(2, user.getAddress());
             ps.setDate(3, user.getBirthday());
             ps.setString(4, user.getFullName());
             ps.setString(5, user.getGender());
-            ps.setInt(6, user.getId());
+            ps.setBoolean(6, user.isLocked());
+            ps.setTimestamp(7, user.getLastLogin());
+            ps.setInt(8, user.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
+
+    public boolean updatePassword(String email, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE email = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setString(2, email);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public int BusinessRegistration(BusinessRegistration reg) throws SQLException {
+        String sql = "INSERT INTO business_registration (user_id, company_name, tax_code, head_office, business_type, custom_type, company_email, company_phone, rep_full_name, rep_position, rep_phone, rep_email, legal_document, file_name, file_path, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, reg.getUserId());
+            ps.setString(2, reg.getCompanyName());
+            ps.setString(3, reg.getTaxCode());
+            ps.setString(4, reg.getHeadOffice());
+            ps.setString(5, reg.getBusinessType());
+            ps.setString(6, reg.getCustomType());
+            ps.setString(7, reg.getCompanyEmail());
+            ps.setString(8, reg.getCompanyPhone());
+            ps.setString(9, reg.getRepFullName());
+            ps.setString(10, reg.getRepPosition());
+            ps.setString(11, reg.getRepPhone());
+            ps.setString(12, reg.getRepEmail());
+            ps.setString(13, reg.getLegalDocument());
+            ps.setString(14, reg.getFileName());
+            ps.setString(15, reg.getFilePath());
+            ps.setString(16, reg.getStatus());
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    public boolean isTaxCodeExists(String taxCode) {
+        String sql = "SELECT COUNT(*) FROM business_registration WHERE tax_code = ?";
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, taxCode);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isCompanyNameExists(String companyName) {
+        String sql = "SELECT COUNT(*) FROM business_registration WHERE company_name = ?";
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, companyName);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isCompanyEmailExists(String companyEmail) {
+        String sql = "SELECT COUNT(*) FROM business_registration WHERE company_email = ?";
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, companyEmail);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isCompanyPhoneExists(String companyPhone) {
+        String sql = "SELECT COUNT(*) FROM business_registration WHERE company_phone = ?";
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, companyPhone);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<BusinessRegistration> getBusinessRegistrationsByUser(int userId) throws Exception {
+        List<BusinessRegistration> list = new ArrayList<>();
+        String sql = "SELECT * FROM business_registration WHERE user_id = ? ORDER BY submitted_at DESC";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    BusinessRegistration reg = new BusinessRegistration();
+                    reg.setId(rs.getInt("id"));
+                    reg.setUserId(rs.getInt("user_id"));
+                    reg.setCompanyName(rs.getString("company_name"));
+                    reg.setTaxCode(rs.getString("tax_code"));
+                    reg.setCompanyEmail(rs.getString("company_email"));
+                    reg.setCompanyPhone(rs.getString("company_phone"));
+                    reg.setHeadOffice(rs.getString("head_office"));
+                    reg.setBusinessType(rs.getString("business_type"));
+                    reg.setCustomType(rs.getString("custom_type"));
+                    reg.setRepFullName(rs.getString("rep_full_name"));
+                    reg.setRepPosition(rs.getString("rep_position"));
+                    reg.setRepPhone(rs.getString("rep_phone"));
+                    reg.setRepEmail(rs.getString("rep_email"));
+                    reg.setLegalDocument(rs.getString("legal_document"));
+                    reg.setFileName(rs.getString("file_name"));
+                    reg.setFilePath(rs.getString("file_path"));
+                    reg.setStatus(rs.getString("status"));
+                    reg.setSubmittedAt(rs.getTimestamp("submitted_at"));
+                    list.add(reg);
+                }
+            }
+        }
+        return list;
+    }
+
+  public BusinessRegistration getBusinessRegistrationById(int id) throws Exception {
+    String sql = "SELECT * FROM business_registration WHERE id = ?";
+    try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                BusinessRegistration reg = new BusinessRegistration();
+                reg.setId(rs.getInt("id"));
+                reg.setUserId(rs.getInt("user_id"));
+                reg.setCompanyName(rs.getString("company_name"));
+                reg.setTaxCode(rs.getString("tax_code"));
+                reg.setCompanyEmail(rs.getString("company_email"));
+                reg.setCompanyPhone(rs.getString("company_phone"));
+                reg.setHeadOffice(rs.getString("head_office"));
+                reg.setBusinessType(rs.getString("business_type"));
+                reg.setCustomType(rs.getString("custom_type"));
+                reg.setRepFullName(rs.getString("rep_full_name"));
+                reg.setRepPosition(rs.getString("rep_position"));
+                reg.setRepPhone(rs.getString("rep_phone"));
+                reg.setRepEmail(rs.getString("rep_email"));
+                reg.setLegalDocument(rs.getString("legal_document"));
+                reg.setFileName(rs.getString("file_name"));
+                reg.setFilePath(rs.getString("file_path"));
+                reg.setStatus(rs.getString("status"));
+                reg.setRejectReason(rs.getString("rejection_reason")); // Phải có dòng này
+                reg.setSubmittedAt(rs.getTimestamp("submitted_at"));
+                return reg;
+            }
+        }
+    }
+    return null; // hoặc ném exception nếu muốn
+}
+
+    public List<BusinessRegistration> getAllBusinessRegistrations() throws Exception {
+        List<BusinessRegistration> list = new ArrayList<>();
+        String sql = "SELECT * FROM business_registration ORDER BY submitted_at DESC";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    BusinessRegistration reg = new BusinessRegistration();
+                    reg.setId(rs.getInt("id"));
+                    reg.setUserId(rs.getInt("user_id"));
+                    reg.setCompanyName(rs.getString("company_name"));
+                    reg.setTaxCode(rs.getString("tax_code"));
+                    reg.setCompanyEmail(rs.getString("company_email"));
+                    reg.setCompanyPhone(rs.getString("company_phone"));
+                    reg.setHeadOffice(rs.getString("head_office"));
+                    reg.setBusinessType(rs.getString("business_type"));
+                    reg.setCustomType(rs.getString("custom_type"));
+                    reg.setRepFullName(rs.getString("rep_full_name"));
+                    reg.setRepPosition(rs.getString("rep_position"));
+                    reg.setRepPhone(rs.getString("rep_phone"));
+                    reg.setRepEmail(rs.getString("rep_email"));
+                    reg.setLegalDocument(rs.getString("legal_document"));
+                    reg.setFileName(rs.getString("file_name"));
+                    reg.setFilePath(rs.getString("file_path"));
+                    reg.setStatus(rs.getString("status"));
+                    reg.setSubmittedAt(rs.getTimestamp("submitted_at"));
+                    list.add(reg);
+                }
+            }
+        }
+        return list;
+    }
+
+    public void updateStatus(int id, String status) throws Exception {
+        String sql = "UPDATE business_registration SET status = ? WHERE id = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        }
+    }
+// Cập nhật trạng thái + lý do từ chối
+
+    public void updateStatusWithReason(int id, String status, String reason) throws Exception {
+        String sql = "UPDATE business_registration SET status = ?, rejection_reason = ? WHERE id = ?";
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setString(2, reason);
+            ps.setInt(3, id);
+            ps.executeUpdate();
+        }
+    }
+
+// Đổi role user thành business (dựa trên user_id trong business_registration)
+    public void upgradeUserRoleToBusiness(int registrationId) throws Exception {
+        String sql = """
+        UPDATE users
+        SET role = 'business'
+        WHERE id = (
+            SELECT user_id FROM business_registration WHERE id = ?
+        )
+    """;
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, registrationId);
+            ps.executeUpdate();
+        }
+    }
+
+// Hàm duyệt đơn đăng ký doanh nghiệp
+    public void approveBusinessRegistration(int id) throws SQLException {
+        String updateRegistrationSql = "UPDATE business_registration SET status = 'approved' WHERE id = ?";
+        String updateUserRoleSql = "UPDATE users SET role = 'business' WHERE id = (SELECT user_id FROM business_registration WHERE id = ?)";
+
+        try (Connection conn = DBContext.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement ps1 = conn.prepareStatement(updateRegistrationSql); PreparedStatement ps2 = conn.prepareStatement(updateUserRoleSql)) {
+
+                ps1.setInt(1, id);
+                ps1.executeUpdate();
+
+                ps2.setInt(1, id);
+                ps2.executeUpdate();
+
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            }
+        }
+    }
+
+    // Hàm từ chối đơn đăng ký doanh nghiệp kèm lý do
+    public void rejectBusinessRegistration(int id, String reason) throws SQLException {
+        String sql = "UPDATE business_registration SET status = 'rejected', rejection_reason = ? WHERE id = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, reason);
+            ps.setInt(2, id);
+
+            ps.executeUpdate();
+        }
+    }
+
+    public List<BusinessRegistration> getBusinessRegistrationsByStatus(String status) throws Exception {
+        List<BusinessRegistration> list = new ArrayList<>();
+        String sql = "SELECT * FROM business_registration WHERE status = ? ORDER BY submitted_at DESC";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    BusinessRegistration reg = new BusinessRegistration();
+                    reg.setId(rs.getInt("id"));
+                    reg.setUserId(rs.getInt("user_id"));
+                    reg.setCompanyName(rs.getString("company_name"));
+                    reg.setTaxCode(rs.getString("tax_code"));
+                    reg.setCompanyEmail(rs.getString("company_email"));
+                    reg.setCompanyPhone(rs.getString("company_phone"));
+                    reg.setHeadOffice(rs.getString("head_office"));
+                    reg.setBusinessType(rs.getString("business_type"));
+                    reg.setCustomType(rs.getString("custom_type"));
+                    reg.setRepFullName(rs.getString("rep_full_name"));
+                    reg.setRepPosition(rs.getString("rep_position"));
+                    reg.setRepPhone(rs.getString("rep_phone"));
+                    reg.setRepEmail(rs.getString("rep_email"));
+                    reg.setLegalDocument(rs.getString("legal_document"));
+                    reg.setFileName(rs.getString("file_name"));
+                    reg.setFilePath(rs.getString("file_path"));
+                    reg.setStatus(rs.getString("status"));
+                    reg.setRejectReason(rs.getString("rejection_reason")); // <- BỔ SUNG DÒNG NÀY
+                    reg.setSubmittedAt(rs.getTimestamp("submitted_at"));
+                    
+                    list.add(reg);
+                }
+            }
+        }
+        return list;
+    }
+
+    public boolean updateUserLockStatus(int userId, boolean locked) {
+        String sql = "UPDATE users SET locked = ? WHERE id = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setBoolean(1, locked);
+            ps.setInt(2, userId);
+
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0; // Nếu có bản ghi được cập nhật thì trả về true
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public User getUserByEmailAndPassword(String email, String password) {
+        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullName(rs.getString("fullname"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                user.setLocked(rs.getBoolean("locked")); // lấy trạng thái khóa
+                // lấy các trường khác...
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
