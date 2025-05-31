@@ -21,11 +21,144 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <style>
             body {
+                font-family: 'Roboto', sans-serif;
+                background-color: #f5f5f5;
+                color: #333;
+                line-height: 1.6;
+                margin: 0;
                 min-height: 100vh;
                 background: #f7fef9;
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start; /* Đẩy nội dung lên trên */
+            }
+            /* Header Top (White Background) */
+            .header-top {
+                background: #fff;
+                color: #333;
+                padding: 10px 0;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+            .header-top .container-fluid {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+            .header-top .logo img {
+                width: 50px;
+                height: auto;
+            }
+            .header-top .search {
+                flex-grow: 1;
+                max-width: 400px;
+                margin: 0 20px;
+            }
+            .header-top .search input {
+                border: 1px solid #ccc;
+                border-radius: 25px;
+                padding: 8px 15px;
+                width: 100%;
+                background: #f9f9f9;
+                color: #333;
+                transition: background 0.3s ease;
+                text-align: center;
+            }
+            .header-top .search input:focus {
+                background: #fff;
+                outline: none;
+            }
+            .header-top .search input::placeholder {
+                color: #888;
+            }
+            .header-top .notification a {
+                color: #333;
+                font-size: 1.2rem;
+                transition: color 0.3s ease;
+            }
+            .header-top .notification a:hover {
+                color: #2e7d32;
+            }
+            .nav-item.dropdown::marker {
+                content: none !important;
+            }
+
+            /* Header Bottom (Green Background) */
+            .header-bottom {
+                background: #2e7d32;
+                color: #fff;
+                padding: 10px 0;
+            }
+            .header-bottom .container-fluid {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+            .header-bottom .navbar-nav {
+                display: flex;
+                align-items: center;
+            }
+            .header-bottom .nav-link {
+                color: #fff !important;
+                font-size: 1rem;
+                font-weight: 400;
+                padding: 0.5rem 1rem;
+                transition: color 0.3s ease;
+            }
+            .header-bottom .nav-link:hover {
+                color: #a5d6a7 !important;
+            }
+            .header-bottom .user-actions {
+                margin-left: 20px;
+            }
+            .header-bottom .user-actions a {
+                color: #000;
+                font-size: 1rem;
+                margin-left: 10px;
+                transition: color 0.3s ease;
+            }
+            .header-bottom .user-actions a:hover {
+                color: #a5d6a7;
+            }
+
+            .sidebar {
+                background: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgb(34 197 94 / 10%);
+                min-height: 300px;
+            }
+            .sidebar h4 {
+                font-weight: 700;
+                color: #15803d;
+                margin-bottom: 20px;
+            }
+            .sidebar a {
+                display: block;
+                padding: 10px 0;
+                color: #15803d;
+                font-weight: 500;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+            .sidebar a:hover, .sidebar a.active {
+                color: #0b4a1e;
+                font-weight: 700;
+            }
+            #business-dropdown a {
+                padding-left: 18px;
+                font-weight: normal;
+                font-size: 0.97em;
+            }
+            .main-content-wrapper {
+                margin-left: 220px; /* để không bị sidebar che */
+                flex-grow: 1;
+                display: flex;
+                justify-content: center; /* căn giữa ngang */
+                align-items: flex-start; /* canh top */
+                padding: 40px 20px;
+                min-height: 100vh;
             }
             .profile-card {
                 max-width: 480px;
@@ -69,45 +202,120 @@
         </style>
     </head>
     <body style="background: #f7fef9;">
-        <div class="profile-card">
-            <% if ("success".equals(msg)) { %>
-            <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
-                Cập nhật thông tin thành công!
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <% } %>
-            <div class="profile-title mb-3">
-                <%= user.getFullName() != null ? user.getFullName() : "Chưa cập nhật" %>
-            </div>
-            <table class="table profile-table">
-                <tr>
-                    <th>Giới tính</th>
-                    <td><%= user.getGender() != null ? user.getGender() : "Chưa cập nhật" %></td>
-                </tr>
-                <tr>
-                    <th>Email</th>
-                    <td><%= user.getEmail() %></td>
-                </tr>
-                <tr>
-                    <th>Số điện thoại</th>
-                    <td><%= user.getPhone() != null ? user.getPhone() : "Chưa cập nhật" %></td>
-                </tr>
-                <tr>
-                    <th>Địa chỉ</th>
-                    <td><%= user.getAddress() != null ? user.getAddress() : "Chưa cập nhật" %></td>
-                </tr>
-                <tr>
-                    <th>Ngày sinh</th>
-                    <td><%= user.getBirthday() != null ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(user.getBirthday()) : "Chưa cập nhật" %></td>
-                </tr>
-            </table>
-            <div class="d-flex justify-content-between gap-2 mt-3">
-                <a href="editprofile.jsp" class="btn btn-success btn-genz w-50">✏️ Chỉnh sửa</a>
-                <a href="index.jsp" class="btn btn-outline-primary btn-genz w-50">🏡 Trang chủ</a>
+        <div class="header-top">
+            <div class="container-fluid">
+                <div class="logo">
+                    <a href="${pageContext.request.contextPath}/index.jsp">
+                        <img src="https://img.icons8.com/color/48/000000/plant.png" alt="Logo">
+                    </a>
+                </div>
+                <div class="search">
+                    <input type="text" placeholder="Tìm kiếm sản phẩm...">
+                </div>
+                <div class="notification">
+                    <a href="#"><i class="fas fa-bell"></i></a>
+                </div>
             </div>
         </div>
-                
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <div class="header-bottom bg-success text-white py-2">
+            <div class="container-fluid d-flex align-items-center position-relative">
+
+                <ul class="navbar-nav d-flex flex-row gap-4 mb-0 position-absolute start-50 translate-middle-x">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="${pageContext.request.contextPath}/index.jsp">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="${pageContext.request.contextPath}/products.jsp">Sản phẩm</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="${pageContext.request.contextPath}/news.jsp">Tin tức</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="${pageContext.request.contextPath}/foods.jsp">Đặc sản</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="${pageContext.request.contextPath}/contact.jsp">Liên hệ</a>
+                    </li>
+                </ul>
+
+                <div class="user-actions ms-auto d-flex gap-3">
+                    <% if (user == null) { %>
+                    <a class="text-white" href="${pageContext.request.contextPath}/login.jsp">Đăng nhập</a>
+                    <a class="text-white" href="${pageContext.request.contextPath}/register.jsp">Đăng ký</a>
+                    <% } else { %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user"></i> <%= user.getFullName() %>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                            <li><a class="dropdown-item" href="profile.jsp">Thông tin cá nhân</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
+                        </ul>
+                    </li>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid py-4">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-3">
+                    <div class="sidebar">
+                        <h4>Menu</h4>
+                        <a href="profile.jsp" class="sidebar-link">Thông tin cá nhân</a>
+                        <a href="#" class="sidebar-link" onclick="toggleBusinessDropdown(); return false;">
+                            Đăng ký doanh nghiệp <span style="font-size:0.8em;">▼</span>
+                        </a>
+                        <div id="business-dropdown" style="display: none; margin-left: 16px;">
+                            <a href="register-business.jsp" class="sidebar-link">Viết đơn</a>
+                            <a href="register-business-list.jsp" class="sidebar-link">Xem danh sách đơn</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9 center-content">
+                    <div class="profile-card w-100" style="max-width: 500px;">
+                        <% if ("success".equals(msg)) { %>
+                        <div class="alert alert-success">Cập nhật thông tin thành công!</div>
+                        <% } else if ("business_success".equals(msg)) { %>
+                        <div class="alert alert-success">Đăng ký doanh nghiệp thành công!</div>
+                        <% } %>
+
+                        <div class="profile-title mb-3">
+                            <%= user.getFullName() != null ? user.getFullName() : "Chưa cập nhật" %>
+                        </div>
+                        <table class="table profile-table">
+                            <tr>
+                                <th>Giới tính</th>
+                                <td><%= user.getGender() != null ? user.getGender() : "Chưa cập nhật" %></td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td><%= user.getEmail() %></td>
+                            </tr>
+                            <tr>
+                                <th>Số điện thoại</th>
+                                <td><%= user.getPhone() != null ? user.getPhone() : "Chưa cập nhật" %></td>
+                            </tr>
+                            <tr>
+                                <th>Địa chỉ</th>
+                                <td><%= user.getAddress() != null ? user.getAddress() : "Chưa cập nhật" %></td>
+                            </tr>
+                            <tr>
+                                <th>Ngày sinh</th>
+                                <td><%= user.getBirthday() != null ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(user.getBirthday()) : "Chưa cập nhật" %></td>
+                            </tr>
+                        </table>
+                        <div class="d-flex justify-content-between gap-2 mt-3">
+                            <a href="editprofile.jsp" class="btn btn-success btn-genz w-50">✏️ Chỉnh sửa</a>
+                            <a href="index.jsp" class="btn btn-outline-primary btn-genz w-50">🏡 Trang chủ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script>
             window.onload = function () {
                 var alertBox = document.getElementById('success-alert');
@@ -119,5 +327,14 @@
                 }
             };
         </script>
+
+        <script>
+            function toggleBusinessDropdown() {
+                var dropdown = document.getElementById("business-dropdown");
+                dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+            }
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

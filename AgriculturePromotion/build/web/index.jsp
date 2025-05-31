@@ -68,6 +68,10 @@
             .header-top .notification a:hover {
                 color: #2e7d32;
             }
+            .nav-item.dropdown::marker {
+                content: none !important;
+            }
+
             /* Header Bottom (Green Background) */
             .header-bottom {
                 background: #2e7d32;
@@ -98,7 +102,7 @@
                 margin-left: 20px;
             }
             .header-bottom .user-actions a {
-                color: #fff;
+                color: #000;
                 font-size: 1rem;
                 margin-left: 10px;
                 transition: color 0.3s ease;
@@ -494,7 +498,7 @@
                                         <p>Cập nhật mới nhất từ cộng đồng nông dân.</p>
                                     </div>
                                     <div class="carousel-item text-center">
-                                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" class="d-block mx-auto rounded mb-3" alt="Tin tức 1">
+
                                         <h5>Tin tức nông dân 2</h5>
                                         <p>Thông tin về mùa vụ mới tại vùng nông thôn.</p>
                                     </div>
@@ -512,7 +516,6 @@
                     </div>
                 </div>
             </div>
-
 
 
             <div class="container-fluid py-4">
