@@ -127,6 +127,9 @@
     <body>
         <div class="login-container">
             <h2><i class="fas fa-leaf me-2"></i>Đăng nhập</h2>
+             <%-- Tích hợp notification.jsp để hiển thị thông báo --%>
+    <%@ include file="notification.jsp" %>
+
             <div class="social-login">
                 <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/AgriculturePromotion/googleCallback&response_type=code&client_id=799257369726-5f4bmtll9vr8hb1e066asncb2c1i0m4t.apps.googleusercontent.com&access_type=offline&prompt=consent" class="google-signin-button">
                     <img class="google-icon" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
@@ -175,6 +178,19 @@
 
                     return true;
                 }
+                document.addEventListener('DOMContentLoaded', function() {
+        var alerts = document.querySelectorAll('.alert');
+        if (alerts.length > 0) {
+            setTimeout(function() {
+                alerts.forEach(function(alert) {
+                    alert.classList.remove('show');
+                    alert.classList.add('fade');
+                    setTimeout(() => alert.remove(), 150);
+                });
+            }, 5000);
+        }
+    });
+
         </script>
     </body>
 </html>
