@@ -17,7 +17,40 @@ public class User {
     private String gender;   // Added
     private String password;
     private String picture;
+    private boolean locked;          //Added
+    private Timestamp lastLogin;
+
     public User() {
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public Timestamp getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Timestamp lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt, String fullName, String gender, boolean locked, Timestamp lastLogin) {
+        this.id = id;
+        this.email = email;
+        this.role = role;
+        this.phone = phone;
+        this.address = address;
+        this.birthday = birthday;
+        this.createdAt = createdAt;
+        this.fullName = fullName;
+        this.gender = gender;
+        this.locked = locked;
+        this.lastLogin = lastLogin;
     }
 
     public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt, String fullName, String gender, String password) {

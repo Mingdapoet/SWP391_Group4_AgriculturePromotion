@@ -1,8 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
- <welcome-file-list>
+    <servlet>
+        <servlet-name>AdminDeleteUserServlet</servlet-name>
+        <servlet-class>controller.admin.AdminDeleteUserServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminUserListServlet</servlet-name>
+        <servlet-class>controller.admin.AdminUserListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BusinessApprovalServlet</servlet-name>
+        <servlet-class>controller.admin.BusinessApprovalServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BusinessRegistrationDetailServlet</servlet-name>
+        <servlet-class>controller.admin.BusinessRegistrationDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BusinessRegistrationListServlet</servlet-name>
+        <servlet-class>controller.admin.BusinessRegistrationListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserLockServlet</servlet-name>
+        <servlet-class>controller.admin.UserLockServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminDeleteUserServlet</servlet-name>
+        <url-pattern>/AdminDeleteUserServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminUserListServlet</servlet-name>
+        <url-pattern>/AdminUserListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BusinessApprovalServlet</servlet-name>
+        <url-pattern>/BusinessApprovalServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BusinessRegistrationDetailServlet</servlet-name>
+        <url-pattern>/BusinessRegistrationDetailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BusinessRegistrationListServlet</servlet-name>
+        <url-pattern>/BusinessRegistrationListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserLockServlet</servlet-name>
+        <url-pattern>/UserLockServlet</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-
-
 </web-app>

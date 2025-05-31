@@ -430,8 +430,12 @@
                             <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user"></i> <%= user.getFullName() %>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
                                 <li><a class="dropdown-item" href="profile.jsp">Thông tin cá nhân</a></li>
+                                    <% if ("admin".equals(user.getRole())) { %>
+                               
+                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/adminDashboard.jsp">Quản lý người dùng</a></li>
+                                    <% } %>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
                             </ul>
