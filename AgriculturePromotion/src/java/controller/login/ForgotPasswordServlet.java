@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Properties;
 import java.util.Random;
 
@@ -67,8 +68,8 @@ public class ForgotPasswordServlet extends HttpServlet {
                     return;
                 }
 
-                // Tạo OTP mới và lưu vào database mà không xóa OTP cũ
                 String otp = generateOTP();
+                dao = new UserDAO();
                 boolean saved = dao.saveResetRequest(email, otp);
                 if (!saved) {
                     request.setAttribute("error", "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!");
@@ -78,7 +79,7 @@ public class ForgotPasswordServlet extends HttpServlet {
                 System.out.println("ForgotPasswordServlet: Resent OTP saved successfully for email: " + email);
 
                 sendOtpEmail(email, otp);
-                request.setAttribute("message", "Mã OTP mới đã được gửi!");
+                request.setAttribute("message", "Mã OTP đã được gửi lại!");
                 request.getRequestDispatcher("/forgotpassword.jsp?step=verify&email=" + email).forward(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -110,10 +111,18 @@ public class ForgotPasswordServlet extends HttpServlet {
                 boolean success = dao.updatePassword(email, newPassword);
 
                 if (success) {
-                    // Xóa tất cả OTP của email sau khi đổi mật khẩu thành công
-                    dao = new UserDAO();
-                    dao.deleteResetRequest(email, otp);
-                    response.sendRedirect("login.jsp?message=Đổi mật khẩu thành công!");
+                    try {
+                        dao = new UserDAO();
+                        dao.deleteResetRequest(email, otp); // Xóa OTP đã sử dụng
+                        String message = URLEncoder.encode("Đổi mật khẩu thành công!", "UTF-8");
+                        System.out.println("ForgotPasswordServlet: Password changed successfully for email: " + email + ", redirecting to login.jsp");
+                        response.sendRedirect("login.jsp?message=" + message);
+                    } catch (Exception e) {
+                        System.err.println("ForgotPasswordServlet: Error deleting OTP: " + e.getMessage());
+                        e.printStackTrace();
+                        String message = URLEncoder.encode("Đổi mật khẩu thành công, nhưng có lỗi khi xóa OTP!", "UTF-8");
+                        response.sendRedirect("login.jsp?message=" + message);
+                    }
                 } else {
                     request.setAttribute("error", "Đổi mật khẩu thất bại, thử lại sau!");
                     request.getRequestDispatcher("/forgotpassword.jsp?step=verify&email=" + email).forward(request, response);

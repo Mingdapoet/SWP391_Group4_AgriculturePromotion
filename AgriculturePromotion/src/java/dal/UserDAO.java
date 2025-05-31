@@ -144,6 +144,21 @@ public class UserDAO {
         return false;
     }
 }
+    public boolean verifyPassword(String email, String password) throws SQLException {
+        String sql = "SELECT password FROM users WHERE email = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String storedPassword = rs.getString("password");
+                boolean isMatch = password.equals(storedPassword);
+                System.out.println("UserDAO.verifyPassword - Email: " + email + ", Password match: " + isMatch);
+                return isMatch;
+            }
+        }
+        System.err.println("UserDAO.verifyPassword: No user found for email: " + email);
+        return false;
+    }
      public boolean verifyOtp(String email, String otp) {
         if (conn == null) {
             System.err.println("UserDAO.verifyOtp: Database connection is null at " + new Timestamp(System.currentTimeMillis()));

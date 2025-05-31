@@ -19,6 +19,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thông tin cá nhân</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
             body {
                 font-family: 'Roboto', sans-serif;
@@ -220,7 +221,6 @@
 
         <div class="header-bottom bg-success text-white py-2">
             <div class="container-fluid d-flex align-items-center position-relative">
-
                 <ul class="navbar-nav d-flex flex-row gap-4 mb-0 position-absolute start-50 translate-middle-x">
                     <li class="nav-item">
                         <a class="nav-link text-white" href="${pageContext.request.contextPath}/index.jsp">Trang chủ</a>
@@ -264,7 +264,7 @@
                 <div class="col-md-3">
                     <div class="sidebar">
                         <h4>Menu</h4>
-                        <a href="profile.jsp" class="sidebar-link">Thông tin cá nhân</a>
+                        <a href="profile.jsp" class="sidebar-link active">Thông tin cá nhân</a>
                         <a href="#" class="sidebar-link" onclick="toggleBusinessDropdown(); return false;">
                             Đăng ký doanh nghiệp <span style="font-size:0.8em;">▼</span>
                         </a>
@@ -276,10 +276,19 @@
                 </div>
                 <div class="col-md-9 center-content">
                     <div class="profile-card w-100" style="max-width: 500px;">
+                        <%-- Tích hợp notification.jsp để hiển thị thông báo --%>
+                        <%@ include file="notification.jsp" %>
+
                         <% if ("success".equals(msg)) { %>
-                        <div class="alert alert-success">Cập nhật thông tin thành công!</div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            Cập nhật thông tin thành công!
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                         <% } else if ("business_success".equals(msg)) { %>
-                        <div class="alert alert-success">Đăng ký doanh nghiệp thành công!</div>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            Đăng ký doanh nghiệp thành công!
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                         <% } %>
 
                         <div class="profile-title mb-3">
@@ -317,18 +326,19 @@
         </div>
 
         <script>
-            window.onload = function () {
-                var alertBox = document.getElementById('success-alert');
-                if (alertBox) {
-                    alertBox.style.display = 'block';
-                    setTimeout(function () {
-                        alertBox.style.display = 'none';
-                    }, 5000); // 5000ms = 5 second
+            document.addEventListener('DOMContentLoaded', function() {
+                var alerts = document.querySelectorAll('.alert');
+                if (alerts.length > 0) {
+                    setTimeout(function() {
+                        alerts.forEach(function(alert) {
+                            alert.classList.remove('show');
+                            alert.classList.add('fade');
+                            setTimeout(() => alert.remove(), 150);
+                        });
+                    }, 5000);
                 }
-            };
-        </script>
+            });
 
-        <script>
             function toggleBusinessDropdown() {
                 var dropdown = document.getElementById("business-dropdown");
                 dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
