@@ -24,7 +24,7 @@
             .header-top {
                 background: #fff;
                 color: #333;
-                padding: 10px 0;
+                padding: 10px 20px;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             }
             .header-top .container-fluid {
@@ -32,6 +32,7 @@
                 align-items: center;
                 justify-content: space-between;
                 flex-wrap: wrap;
+                padding: 10px 20px;
             }
             .header-top .logo img {
                 width: 50px;
@@ -75,7 +76,7 @@
             .header-bottom {
                 background: #2e7d32;
                 color: #fff;
-                padding: 10px 0;
+                padding: 10px 20px;
             }
             .header-bottom .container-fluid {
                 display: flex;
@@ -385,7 +386,7 @@
                 <div class="container-fluid">
                     <div class="logo">
                         <a href="${pageContext.request.contextPath}/index.jsp">
-                            <img src="https://img.icons8.com/color/48/000000/plant.png" alt="Logo">
+                            <img src="images/logonongsan.png" style="height: 48px;">
                         </a>
                     </div>
                     <div class="search">
@@ -396,6 +397,8 @@
                     </div>
                 </div>
             </div>
+
+
 
             <div class="header-bottom bg-success text-white py-2">
                 <div class="container-fluid d-flex align-items-center position-relative">
@@ -495,7 +498,7 @@
                                         <p>Cập nhật mới nhất từ cộng đồng nông dân.</p>
                                     </div>
                                     <div class="carousel-item text-center">
-                                        <img src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80" class="d-block mx-auto rounded mb-3" alt="Tin tức 2">
+
                                         <h5>Tin tức nông dân 2</h5>
                                         <p>Thông tin về mùa vụ mới tại vùng nông thôn.</p>
                                     </div>
@@ -513,6 +516,7 @@
                     </div>
                 </div>
             </div>
+
 
             <div class="container-fluid py-4">
                 <div class="row row-cols-1 row-cols-md-2 g-4"> <%-- Adjusted for better responsive behavior --%>
