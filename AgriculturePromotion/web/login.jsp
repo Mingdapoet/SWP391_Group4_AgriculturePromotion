@@ -121,8 +121,7 @@
             .form-group {
                 margin-bottom: 1rem;
             }
-     
-           
+            
         </style>
     </head>
     <body>
@@ -144,9 +143,13 @@
                 <div class="form-group">
                     <label for="password" class="form-label">Nhập mật khẩu</label>
                     <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="forgot-password text-end mt-1">
+                        <a href="forgotpassword.jsp" class="text-decoration-none text-success fw-medium">Quên mật khẩu?</a>
+                    </div>
+
                     <div class="g-recaptcha mt-2" data-sitekey="6LcboUErAAAAAGZkSfxj-9fL7Z7FgeyP-DsULZ3b"></div>
                     <p id="errorCaptcha" class="text-danger text-center mt-2"></p>
-                  
+
                 </div>
                 <button type="submit" class="btn btn-login w-100 text-white">Đăng nhập</button>
                 <% if (request.getAttribute("error") != null) { %>
@@ -156,7 +159,7 @@
             <div class="register-now">
                 Bạn chưa có tài khoản? <a href="${pageContext.request.contextPath}/register.jsp">Đăng ký ngay</a>
             </div>
-         
+
         </div>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

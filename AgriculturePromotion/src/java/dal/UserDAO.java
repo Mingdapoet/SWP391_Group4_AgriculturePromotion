@@ -70,8 +70,8 @@ public class UserDAO {
                     rs.getDate("birthday"),
                     rs.getTimestamp("created_at"),
                     rs.getString("fullName"),
-                    rs.getString("gender")
-//                    rs.getString("password") // Sử dụng constructor mới
+                    rs.getString("gender"),
+                    rs.getString("password") // Sử dụng constructor mới
                 );
                 System.out.println("UserDAO.getUserByEmail - Email: " + email + ", Password: " + user.getPassword());
                 return user;
@@ -113,7 +113,76 @@ public class UserDAO {
             return false;
         }
     }
-     
+    public boolean saveResetRequest(String email, String otp) {
+    if (conn == null) {
+        System.err.println("UserDAO.saveResetRequest: Database connection is null at " + new Timestamp(System.currentTimeMillis()));
+        return false;
+    }
+
+    // Xóa các OTP đã hết hạn của email này
+    String deleteExpiredSql = "DELETE FROM password_resets WHERE email = ? AND expires_at < GETDATE()";
+    try (PreparedStatement deleteStmt = conn.prepareStatement(deleteExpiredSql)) {
+        deleteStmt.setString(1, email);
+        int rowsDeleted = deleteStmt.executeUpdate();
+        System.out.println("UserDAO.saveResetRequest - Deleted expired OTPs for email: " + email + ", Rows deleted: " + rowsDeleted);
+    } catch (SQLException e) {
+        System.err.println("UserDAO.saveResetRequest: Error deleting expired OTPs: " + e.getMessage());
+        e.printStackTrace();
+    }
+
+    // Chèn OTP mới
+    String insertSql = "INSERT INTO password_resets (email, otp, expires_at) VALUES (?, ?, DATEADD(MINUTE, 10, GETDATE()))";
+    try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+        insertStmt.setString(1, email);
+        insertStmt.setString(2, otp);
+        int rowsInserted = insertStmt.executeUpdate();
+        System.out.println("UserDAO.saveResetRequest - Email: " + email + ", OTP: " + otp + ", Rows inserted: " + rowsInserted + " at " + new Timestamp(System.currentTimeMillis()));
+        return rowsInserted > 0;
+    } catch (SQLException e) {
+        System.err.println("UserDAO.saveResetRequest: SQLException during insert: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
+     public boolean verifyOtp(String email, String otp) {
+        if (conn == null) {
+            System.err.println("UserDAO.verifyOtp: Database connection is null at " + new Timestamp(System.currentTimeMillis()));
+            return false;
+        }
+
+        String sql = "SELECT expires_at FROM password_resets WHERE email = ? AND otp = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            stmt.setString(2, otp);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Timestamp expiresAt = rs.getTimestamp("expires_at");
+                Timestamp now = new Timestamp(System.currentTimeMillis());
+                boolean isValid = now.before(expiresAt);
+                System.out.println("UserDAO.verifyOtp - Email: " + email + ", OTP: " + otp + ", Valid: " + isValid + ", Expires at: " + expiresAt + " at " + now);
+                return isValid;
+            } else {
+                System.out.println("UserDAO.verifyOtp - No OTP found for email: " + email + " at " + new Timestamp(System.currentTimeMillis()));
+                return false;
+            }
+        } catch (SQLException e) {
+            System.err.println("UserDAO.verifyOtp: SQLException: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+        public void deleteResetRequest(String email, String otp) {
+        String sql = "DELETE FROM password_resets WHERE email = ? AND otp = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, otp);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("SQLException trong deleteResetRequest: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
      public int BusinessRegistration(BusinessRegistration reg) throws SQLException {
     String sql = "INSERT INTO business_registration (user_id, company_name, head_office, business_type, custom_type, rep_full_name, rep_position, rep_phone, rep_email, legal_document, file_name, file_path, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
