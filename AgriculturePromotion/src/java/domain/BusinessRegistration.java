@@ -30,6 +30,37 @@ public class BusinessRegistration {
     private String filePath;
     private String status;
     private Date submittedAt;
+    private String rejectReason;
+
+    public BusinessRegistration(int id, int userId, String companyName, String taxCode, String companyEmail, String companyPhone, String headOffice, String businessType, String customType, String repFullName, String repPosition, String repPhone, String repEmail, String legalDocument, String fileName, String filePath, String status, Date submittedAt, String rejectReason) {
+        this.id = id;
+        this.userId = userId;
+        this.companyName = companyName;
+        this.taxCode = taxCode;
+        this.companyEmail = companyEmail;
+        this.companyPhone = companyPhone;
+        this.headOffice = headOffice;
+        this.businessType = businessType;
+        this.customType = customType;
+        this.repFullName = repFullName;
+        this.repPosition = repPosition;
+        this.repPhone = repPhone;
+        this.repEmail = repEmail;
+        this.legalDocument = legalDocument;
+        this.fileName = fileName;
+        this.filePath = filePath;
+        this.status = status;
+        this.submittedAt = submittedAt;
+        this.rejectReason = rejectReason;
+    }
+
+    public String getRejectReason() {
+        return rejectReason;
+    }
+
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
+    }
 
     public BusinessRegistration() {
     }
