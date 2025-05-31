@@ -18,7 +18,7 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
-        String birthdayStr = request.getParameter("birthDay");
+        String birthdayStr = request.getParameter("birthday"); // Updated to match JSP
         String fullName = request.getParameter("fullName");
         String gender = request.getParameter("gender");
         String role = "customer"; // Hardcode role as customer
@@ -26,21 +26,21 @@ public class RegisterServlet extends HttpServlet {
         try {
             // Kiểm tra định dạng tên
             if (!isValidFullName(fullName)) {
-                request.setAttribute("fullNameError", "Tên phải có ít nhất 2 ký tự, chỉ chứa chữ cái và dấu cách, chữ cái đầu viết hoa.");
+                request.setAttribute("fullNameError", "Họ và tên phải có ít nhất 2 ký tự, chỉ chứa chữ cái và khoảng trắng, có thể có dấu.");
                 request.getRequestDispatcher("/register.jsp").forward(request, response);
                 return;
             }
 
             // Kiểm tra định dạng mật khẩu
             if (!isValidPassword(password)) {
-                request.setAttribute("passwordError", "Mật khẩu phải có ít nhất 8 ký tự và chữ cái đầu tiên phải viết hoa.");
+                request.setAttribute("passwordError", "Mật khẩu phải có ít nhất 8 ký tự và bắt đầu bằng chữ cái in hoa.");
                 request.getRequestDispatcher("/register.jsp").forward(request, response);
                 return;
             }
 
             // Kiểm tra định dạng email
             if (!isValidEmail(email)) {
-                request.setAttribute("emailError", "Email không hợp lệ.");
+                request.setAttribute("emailError", "Email không hợp lệ. Vui lòng nhập email có phần domain như .com, .vn, .org, hoặc .net.");
                 request.getRequestDispatcher("/register.jsp").forward(request, response);
                 return;
             }
@@ -54,7 +54,7 @@ public class RegisterServlet extends HttpServlet {
 
             // Kiểm tra địa chỉ
             if (!isValidAddress(address)) {
-                request.setAttribute("addressError", "Địa chỉ phải có ít nhất 5 ký tự và không được để trống.");
+                request.setAttribute("addressError", "Địa chỉ phải có ít nhất 5 ký tự và không được chứa ký tự đặc biệt (chỉ cho phép chữ, số, khoảng trắng, dấu chấm, dấu phẩy, dấu gạch ngang).");
                 request.getRequestDispatcher("/register.jsp").forward(request, response);
                 return;
             }
@@ -62,15 +62,15 @@ public class RegisterServlet extends HttpServlet {
             // Kiểm tra ngày sinh
             Date birthday;
             try {
-                birthday = Date.valueOf(birthdayStr);
+                birthday = Date.valueOf(birthdayStr); // Matches Flatpickr's Y-m-d format
             } catch (IllegalArgumentException e) {
-                request.setAttribute("birthDayError", "Ngày sinh không hợp lệ. Vui lòng nhập đúng định dạng (YYYY-MM-DD).");
+                request.setAttribute("birthdayError", "Ngày sinh không hợp lệ. Vui lòng chọn lại.");
                 request.getRequestDispatcher("/register.jsp").forward(request, response);
                 return;
             }
 
             if (!isValidBirthday(birthday)) {
-                request.setAttribute("birthDayError", "Người dùng phải từ 16 tuổi trở lên.");
+                request.setAttribute("birthdayError", "Người dùng phải từ 16 tuổi trở lên.");
                 request.getRequestDispatcher("/register.jsp").forward(request, response);
                 return;
             }
@@ -102,7 +102,7 @@ public class RegisterServlet extends HttpServlet {
         if (password == null || password.length() < 8) {
             return false;
         }
-        return Character.isUpperCase(password.charAt(0));
+        return password.matches("^[A-Z].*");
     }
 
     // Kiểm tra định dạng tên
@@ -110,10 +110,7 @@ public class RegisterServlet extends HttpServlet {
         if (fullName == null || fullName.length() < 2) {
             return false;
         }
-        if (!Character.isUpperCase(fullName.charAt(0))) {
-            return false;
-        }
-        return fullName.matches("^[A-Za-z\\s]+$");
+        return fullName.matches("^[A-Za-zÀ-ỹ\\s]+$");
     }
 
     // Kiểm tra định dạng email
@@ -121,7 +118,7 @@ public class RegisterServlet extends HttpServlet {
         if (email == null || email.trim().isEmpty()) {
             return false;
         }
-        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.(com|vn|org|net)$");
     }
 
     // Kiểm tra số điện thoại
@@ -137,7 +134,7 @@ public class RegisterServlet extends HttpServlet {
         if (address == null || address.trim().isEmpty()) {
             return false;
         }
-        return address.length() >= 5;
+        return address.length() >= 5 && address.matches("^[A-Za-zÀ-ỹ0-9\\s.,-]+$");
     }
 
     // Kiểm tra ngày sinh (trên 16 tuổi)

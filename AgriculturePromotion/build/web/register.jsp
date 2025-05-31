@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,6 +8,8 @@
         <title>Đăng ký | Agriculture Production</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+        <!-- Flatpickr CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <style>
             body {
                 font-family: 'Arial', sans-serif;
@@ -71,23 +74,6 @@
             .form-group {
                 margin-bottom: 0.75rem;
             }
-            .birthdate-row {
-                display: flex;
-                margin-top: 0.25rem;
-            }
-
-            .birthdate-col {
-                flex: 1;
-            }
-
-
-
-            .birthdate-row .form-select {
-                flex: 1;
-                padding: 0.3rem 0.5rem;
-
-            }
-
         </style>
     </head>
     <body>
@@ -140,45 +126,18 @@
                             <% } %>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Ngày sinh</label>
-                            <div class="birthdate-row">
-                                <div class="birthdate-col">
-                                    <select class="form-select" id="birthDay" name="birthDay" required>
-                                        <option value="">Ngày</option>
-                                        <% for (int day = 1; day <= 31; day++) { %>
-                                        <option value="<%= day < 10 ? "0" + day : day %>" <%= String.valueOf(day).equals(request.getParameter("birthDay")) ? "selected" : "" %>>
-                                            <%= day %>
-                                        </option>
-                                        <% } %>
-                                    </select>
-                                </div>
-                                <div class="birthdate-col">
-                                    <select class="form-select" id="birthMonth" name="birthMonth" required>
-                                        <option value="">Tháng</option>
-                                        <% for (int month = 1; month <= 12; month++) { %>
-                                        <option value="<%= month < 10 ? "0" + month : month %>" <%= String.valueOf(month).equals(request.getParameter("birthMonth")) ? "selected" : "" %>>
-                                            <%= month %>
-                                        </option>
-                                        <% } %>
-                                    </select>
-                                </div>
-                                <div class="birthdate-col">
-                                    <select class="form-select" id="birthYear" name="birthYear" required>
-                                        <option value="">Năm</option>
-                                        <% 
-                                            int currentYear = java.time.Year.now().getValue();
-                                            for (int year = currentYear; year >= 1900; year--) { 
-                                        %>
-                                        <option value="<%= year %>" <%= String.valueOf(year).equals(request.getParameter("birthYear")) ? "selected" : "" %>>
-                                            <%= year %>
-                                        </option>
-                                        <% } %>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <% if (request.getAttribute("birthDayError") != null) { %>
-                            <div class="error-message"><%= request.getAttribute("birthDayError") %></div>
+                            <label for="birthday" class="form-label">Ngày sinh</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="birthday"
+                                name="birthday"
+                                required
+                                value="<%= request.getParameter("birthday") != null ? request.getParameter("birthday") : "" %>"
+                                autocomplete="off"
+                                />
+                            <% if (request.getAttribute("birthdayError") != null) { %>
+                            <div class="error-message"><%= request.getAttribute("birthdayError") %></div>
                             <% } %>
                         </div>
                     </div>
@@ -231,7 +190,18 @@
             </form>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Flatpickr JS -->
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script>
+            // Initialize Flatpickr for the birthday field
+            flatpickr("#birthday", {
+                dateFormat: "Y-m-d", // Format for the hidden input (submitted value)
+                maxDate: "today", // Prevent selecting future dates
+                altInput: true, // Show a user-friendly format
+                altFormat: "d/m/Y", // Display format (e.g., 01/06/2025)
+                defaultDate: "<%= request.getParameter("birthday") != null ? request.getParameter("birthday") : "" %>"
+            });
+
             document.getElementById('formValidation').addEventListener('submit', function (e) {
                 // Remove previous error messages
                 document.querySelectorAll('.error-message').forEach(el => el.remove());
@@ -241,9 +211,7 @@
                 const email = document.getElementById('email').value;
                 const phone = document.getElementById('phone').value;
                 const address = document.getElementById('address').value;
-                const birthDay = document.getElementById('birthDay').value;
-                const birthMonth = document.getElementById('birthMonth').value;
-                const birthYear = document.getElementById('birthYear').value;
+                const birthday = document.getElementById('birthday').value; // Format: YYYY-MM-DD
 
                 let hasError = false;
 
@@ -296,41 +264,43 @@
                     document.getElementById('address').parentNode.appendChild(errorDiv);
                 }
 
-                // Check birthday (16 or older)
-                if (!birthDay || !birthMonth || !birthYear) {
+                // Check birthday (must be a valid date and user must be 16 or older)
+                if (!birthday) {
                     hasError = true;
                     const errorDiv = document.createElement('div');
                     errorDiv.className = 'error-message';
-                    errorDiv.textContent = 'Vui lòng chọn đầy đủ ngày, tháng, năm sinh.';
-                    document.getElementById('birthDay').parentNode.parentNode.appendChild(errorDiv);
+                    errorDiv.textContent = 'Vui lòng chọn ngày sinh.';
+                    document.getElementById('birthday').parentNode.appendChild(errorDiv);
                 } else {
-                    const birthDate = new Date(`${birthYear}-${birthMonth}-${birthDay}`);
-                                const currentDate = new Date();
-                                let age = currentDate.getFullYear() - birthDate.getFullYear();
-                                const monthDiff = currentDate.getMonth() - birthDate.getMonth();
-                                const dayDiff = currentDate.getDate() - birthDate.getDate();
-                                if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-                                    age--;
-                                }
-                                if (isNaN(birthDate.getTime())) {
-                                    hasError = true;
-                                    const errorDiv = document.createElement('div');
-                                    errorDiv.className = 'error-message';
-                                    errorDiv.textContent = 'Ngày sinh không hợp lệ. Vui lòng kiểm tra lại ngày, tháng, năm.';
-                                    document.getElementById('birthDay').parentNode.parentNode.appendChild(errorDiv);
-                                } else if (age < 16) {
-                                    hasError = true;
-                                    const errorDiv = document.createElement('div');
-                                    errorDiv.className = 'error-message';
-                                    errorDiv.textContent = 'Người dùng phải từ 16 tuổi trở lên.';
-                                    document.getElementById('birthDay').parentNode.parentNode.appendChild(errorDiv);
-                                }
-                            }
+                    const birthDate = new Date(birthday);
+                    if (isNaN(birthDate.getTime())) {
+                        hasError = true;
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'error-message';
+                        errorDiv.textContent = 'Ngày sinh không hợp lệ. Vui lòng chọn lại.';
+                        document.getElementById('birthday').parentNode.appendChild(errorDiv);
+                    } else {
+                        const currentDate = new Date();
+                        let age = currentDate.getFullYear() - birthDate.getFullYear();
+                        const monthDiff = currentDate.getMonth() - birthDate.getMonth();
+                        const dayDiff = currentDate.getDate() - birthDate.getDate();
+                        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                            age--;
+                        }
+                        if (age < 16) {
+                            hasError = true;
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'error-message';
+                            errorDiv.textContent = 'Người dùng phải từ 16 tuổi trở lên.';
+                            document.getElementById('birthday').parentNode.appendChild(errorDiv);
+                        }
+                    }
+                }
 
-                            if (hasError) {
-                                e.preventDefault();
-                            }
-                        });
+                if (hasError) {
+                    e.preventDefault();
+                }
+            });
         </script>
     </body>
-</html> 
+</html>
