@@ -243,7 +243,6 @@
                     </div>
                 </div>
 
-            </div>
             <!-- Danh sách đơn -->
             <div class="col-md-9">
                 <div class="form-container">

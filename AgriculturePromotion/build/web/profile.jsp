@@ -286,10 +286,11 @@
                 <div class="col-md-9 center-content">
                     <div class="profile-card w-100" style="max-width: 500px;">
                         <% if ("success".equals(msg)) { %>
-                        <div class="alert alert-success">Cập nhật thông tin thành công!</div>
+                        <div class="alert alert-success" id="success-alert">Cập nhật thông tin thành công!</div>
                         <% } else if ("business_success".equals(msg)) { %>
-                        <div class="alert alert-success">Đăng ký doanh nghiệp thành công!</div>
+                        <div class="alert alert-success" id="success-alert">Đăng ký doanh nghiệp thành công!</div>
                         <% } %>
+
 
                         <div class="d-flex flex-column align-items-center mb-3">
                             <div style="width: 112px; height: 112px; border-radius: 50%; overflow: hidden; box-shadow: 0 2px 8px #ccc;">
