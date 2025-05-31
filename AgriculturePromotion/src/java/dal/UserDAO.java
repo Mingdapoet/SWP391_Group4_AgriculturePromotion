@@ -72,8 +72,8 @@ public class UserDAO {
                         rs.getDate("birthday"),
                         rs.getTimestamp("created_at"),
                         rs.getString("fullName"),
-                        rs.getString("gender")
-                //                    rs.getString("password") // Sử dụng constructor mới
+                        rs.getString("gender"),
+                        rs.getString("password") // Sử dụng constructor mới
                 );
                 System.out.println("UserDAO.getUserByEmail - Email: " + email + ", Password: " + user.getPassword());
                 return user;
@@ -86,14 +86,15 @@ public class UserDAO {
     }
 
     public boolean updateUserProfile(User user) {
-        String sql = "UPDATE users SET phone = ?, address = ?, birthday = ?, fullname = ?, gender = ? WHERE id = ?";
+        String sql = "UPDATE users SET phone = ?, address = ?, birthday = ?, fullname = ?, gender = ?, avatar=? WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getPhone());
             ps.setString(2, user.getAddress());
             ps.setDate(3, user.getBirthday());
             ps.setString(4, user.getFullName());
             ps.setString(5, user.getGender());
-            ps.setInt(6, user.getId());
+            ps.setString(6, user.getAvatar());
+            ps.setInt(7, user.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

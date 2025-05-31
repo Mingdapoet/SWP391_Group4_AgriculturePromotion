@@ -258,6 +258,10 @@
                     <div class="sidebar">
                         <h4>Menu</h4>
                         <a href="profile.jsp" class="sidebar-link">Thông tin cá nhân</a>
+                        <% 
+                            String role = user.getRole();
+                            if ("customer".equals(role) || "business".equals(role)) { 
+                        %>
                         <a href="#" class="sidebar-link" onclick="toggleBusinessDropdown(); return false;">
                             Đăng ký doanh nghiệp <span style="font-size:0.8em;">▼</span>
                         </a>
@@ -265,8 +269,10 @@
                             <a href="register-business.jsp" class="sidebar-link">Viết đơn</a>
                             <a href="Account?action=listBusiness" class="sidebar-link">Xem danh sách đơn</a>
                         </div>
+                        <% } %>
                     </div>
                 </div>
+
                 <!-- Nội dung chi tiết đơn -->
                 <div class="col-md-9">
                     <div class="detail-card">

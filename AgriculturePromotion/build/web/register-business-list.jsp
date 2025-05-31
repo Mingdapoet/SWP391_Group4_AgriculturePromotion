@@ -228,6 +228,10 @@
                     <div class="sidebar">
                         <h4>Menu</h4>
                         <a href="profile.jsp" class="sidebar-link">Thông tin cá nhân</a>
+                        <% 
+                            String role = user.getRole();
+                            if ("customer".equals(role) || "business".equals(role)) { 
+                        %>
                         <a href="#" class="sidebar-link" onclick="toggleBusinessDropdown(); return false;">
                             Đăng ký doanh nghiệp <span style="font-size:0.8em;">▼</span>
                         </a>
@@ -235,79 +239,82 @@
                             <a href="register-business.jsp" class="sidebar-link">Viết đơn</a>
                             <a href="Account?action=listBusiness" class="sidebar-link">Xem danh sách đơn</a>
                         </div>
+                        <% } %>
                     </div>
                 </div>
-                <!-- Danh sách đơn -->
-                <div class="col-md-9">
-                    <div class="form-container">
-                        <h5>Danh sách đơn đăng ký doanh nghiệp đã gửi</h5>
-                        <div class="table-responsive">
-                            <table class="table table-bordered align-middle">
-                                <thead class="table-success">
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Tên công ty</th>
-                                        <th>Người đại diện</th>
-                                        <th>Ngày gửi</th>
-                                        <th>Trạng thái</th>
-                                        <th>Chi tiết</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <%
-                                        if (registrations == null || registrations.isEmpty()) {
-                                    %>
-                                    <tr>
-                                        <td colspan="6" class="text-center text-muted">Chưa có đơn nào.</td>
-                                    </tr>
-                                    <%
-                                        } else {
-                                            int stt = 1;
-                                            for (BusinessRegistration reg : registrations) {
-                                    %>
-                                    <tr>
-                                        <td><%= stt++ %></td>
-                                        <td><%= reg.getCompanyName() %></td>
-                                        <td><%= reg.getRepFullName() %></td>
-                                        <td><%= reg.getSubmittedAt() != null ? sdf.format(reg.getSubmittedAt()) : "" %></td>
-                                        <td>
-                                            <% String status = reg.getStatus();
-                                               String color = "text-secondary";
-                                               if ("pending".equalsIgnoreCase(status)) color = "text-warning";
-                                               else if ("approved".equalsIgnoreCase(status)) color = "text-success";
-                                               else if ("rejected".equalsIgnoreCase(status)) color = "text-danger";
-                                            %>
-                                            <span class="<%= color %> fw-bold">
-                                                <%= "pending".equals(status) ? "Đang chờ duyệt"
-                                                        : "approved".equals(status) ? "Đã duyệt"
-                                                        : "rejected".equals(status) ? "Từ chối"
-                                                        : status %>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="Account?action=detailBusiness&id=<%= reg.getId() %>" class="btn btn-outline-success btn-sm">
-                                                Xem chi tiết
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <%
-                                            }
+
+            </div>
+            <!-- Danh sách đơn -->
+            <div class="col-md-9">
+                <div class="form-container">
+                    <h5>Danh sách đơn đăng ký doanh nghiệp đã gửi</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên công ty</th>
+                                    <th>Người đại diện</th>
+                                    <th>Ngày gửi</th>
+                                    <th>Trạng thái</th>
+                                    <th>Chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%
+                                    if (registrations == null || registrations.isEmpty()) {
+                                %>
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">Chưa có đơn nào.</td>
+                                </tr>
+                                <%
+                                    } else {
+                                        int stt = 1;
+                                        for (BusinessRegistration reg : registrations) {
+                                %>
+                                <tr>
+                                    <td><%= stt++ %></td>
+                                    <td><%= reg.getCompanyName() %></td>
+                                    <td><%= reg.getRepFullName() %></td>
+                                    <td><%= reg.getSubmittedAt() != null ? sdf.format(reg.getSubmittedAt()) : "" %></td>
+                                    <td>
+                                        <% String status = reg.getStatus();
+                                           String color = "text-secondary";
+                                           if ("pending".equalsIgnoreCase(status)) color = "text-warning";
+                                           else if ("approved".equalsIgnoreCase(status)) color = "text-success";
+                                           else if ("rejected".equalsIgnoreCase(status)) color = "text-danger";
+                                        %>
+                                        <span class="<%= color %> fw-bold">
+                                            <%= "pending".equals(status) ? "Đang chờ duyệt"
+                                                    : "approved".equals(status) ? "Đã duyệt"
+                                                    : "rejected".equals(status) ? "Từ chối"
+                                                    : status %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="Account?action=detailBusiness&id=<%= reg.getId() %>" class="btn btn-outline-success btn-sm">
+                                            Xem chi tiết
+                                        </a>
+                                    </td>
+                                </tr>
+                                <%
                                         }
-                                    %>
-                                </tbody>
-                            </table>
-                        </div>
+                                    }
+                                %>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        <script>
-            function toggleBusinessDropdown() {
-                var dropdown = document.getElementById("business-dropdown");
-                dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
-            }
-        </script>
+    </div>
+    <script>
+        function toggleBusinessDropdown() {
+            var dropdown = document.getElementById("business-dropdown");
+            dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+        }
+    </script>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

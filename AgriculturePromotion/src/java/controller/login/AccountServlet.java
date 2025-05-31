@@ -223,6 +223,43 @@ public class AccountServlet extends HttpServlet {
                 }
             }
 
+            Part avatarPart = null;
+            String avatarPath = user.getAvatar();
+            try {
+                avatarPart = request.getPart("avatar");
+            } catch (Exception ex) {
+                // Không có file cũng không sao
+            }
+
+            if (avatarPart != null && avatarPart.getSize() > 0 && avatarPart.getSubmittedFileName() != null && !avatarPart.getSubmittedFileName().isEmpty()) {
+                String submittedName = avatarPart.getSubmittedFileName();
+                // Validate extension
+                String ext = "";
+                int lastDot = submittedName.lastIndexOf('.');
+                if (lastDot > 0) {
+                    ext = submittedName.substring(lastDot + 1).toLowerCase();
+                }
+                if (!ext.matches("jpg|jpeg|png|gif")) {
+                    errors.put("avatarError", "Chỉ cho phép các file ảnh: jpg, jpeg, png, gif");
+                } else if (avatarPart.getSize() > 2 * 1024 * 1024) { // 2MB
+                    errors.put("avatarError", "Dung lượng ảnh tối đa 2MB");
+                } else {
+                    // Nếu vượt qua hết validation thì mới lưu
+                    try {
+                        String fileName = System.currentTimeMillis() + "_" + submittedName;
+                        String uploadDirPath = getServletContext().getRealPath("") + File.separator + "uploads" + File.separator + "avatars";
+                        File uploadDir = new File(uploadDirPath);
+                        if (!uploadDir.exists()) {
+                            uploadDir.mkdirs();
+                        }
+                        avatarPart.write(uploadDirPath + File.separator + fileName);
+                        avatarPath = "uploads/avatars/" + fileName;
+                    } catch (Exception ex) {
+                        errors.put("avatarError", "Có lỗi khi lưu file ảnh đại diện, vui lòng thử lại.");
+                    }
+                }
+            }
+
             if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
 
@@ -244,6 +281,7 @@ public class AccountServlet extends HttpServlet {
                 user.setPhone(phone);
                 user.setAddress(address);
                 user.setBirthday(birthday);
+                user.setAvatar(avatarPath);
 
                 boolean updated = userDAO.updateUserProfile(user);
 
