@@ -1,7 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="domain.User" %>
 <%@ page import="java.util.Map" %>
-
 <%
     User user = (User) session.getAttribute("user");
     if (user == null) {
@@ -76,13 +75,19 @@
 
             <form action="ChangePassword" method="post">
                 <div class="mb-3">
+                    <label for="password" class="form-label">Mật khẩu hiện tại</label>
+                    <input type="password" class="form-control" id="password" name="password" required />
+                    <% if (errors != null && errors.get("password") != null) { %>
+                        <div class="text-danger"><%= errors.get("password") %></div>
+                    <% } %>
+                </div>
+                <div class="mb-3">
                     <label for="newpassword" class="form-label">Mật khẩu mới</label>
                     <input type="password" class="form-control" id="newpassword" name="newpassword" required />
                     <% if (errors != null && errors.get("newpassword") != null) { %>
                         <div class="text-danger"><%= errors.get("newpassword") %></div>
                     <% } %>
                 </div>
-
                 <div class="mb-3">
                     <label for="confirmpassword" class="form-label">Xác nhận mật khẩu mới</label>
                     <input type="password" class="form-control" id="confirmpassword" name="confirmpassword" required />
@@ -90,7 +95,6 @@
                         <div class="text-danger"><%= errors.get("confirmpassword") %></div>
                     <% } %>
                 </div>
-
                 <button type="submit" class="btn btn-change w-100 text-white">Đổi mật khẩu</button>
                 <a href="editprofile.jsp" class="btn btn-secondary w-100 mt-2">Hủy</a>
             </form>
