@@ -89,50 +89,89 @@
                 height: 18px;
                 margin-right: 8px;
             }
+            .social-login {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            .social-login a {
+                text-decoration: none;
+            }
+            .social-login img {
+                width: 24px;
+                height: 24px;
+            }
+            .separator {
+                display: flex;
+                align-items: center;
+                text-align: center;
+                color: #666;
+                margin: 1.5rem 0;
+            }
+            .separator::before,
+            .separator::after {
+                content: '';
+                flex: 1;
+                border-bottom: 1px solid #ccc;
+            }
+            .separator span {
+                padding: 0 1rem;
+            }
+            .form-group {
+                margin-bottom: 1rem;
+            }
+     
+           
         </style>
     </head>
     <body>
         <div class="login-container">
-            <h2><i class="fas fa-leaf me-2"></i>Login</h2>
+            <h2><i class="fas fa-leaf me-2"></i>Đăng nhập</h2>
+            <div class="social-login">
+                <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/AgriculturePromotion/googleCallback&response_type=code&client_id=799257369726-5f4bmtll9vr8hb1e066asncb2c1i0m4t.apps.googleusercontent.com&access_type=offline&prompt=consent" class="google-signin-button">
+                    <img class="google-icon" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+                    Sign in with Google
+                </a>
+
+            </div>
+            <div class="separator"><span>hoặc</span></div>
             <form action="${pageContext.request.contextPath}/login" method="post" onsubmit="return checkCaptcha()">
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
+                <div class="form-group">
+                    <label for="email" class="form-label">Nhập Email</label>
+                    <input type="text" class="form-control" id="email" name="email" required>
                 </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
+                <div class="form-group">
+                    <label for="password" class="form-label">Nhập mật khẩu</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                     <div class="g-recaptcha mt-2" data-sitekey="6LcboUErAAAAAGZkSfxj-9fL7Z7FgeyP-DsULZ3b"></div>
                     <p id="errorCaptcha" class="text-danger text-center mt-2"></p>
+                  
                 </div>
-                <button type="submit" class="btn btn-login w-100 text-white">Login</button>
+                <button type="submit" class="btn btn-login w-100 text-white">Đăng nhập</button>
+                <% if (request.getAttribute("error") != null) { %>
+                <p class="error-message text-danger"><%= request.getAttribute("error") %></p>
+                <% } %>
             </form>
-            <div class="register-link">
-        <p>Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register.jsp">Đăng ký tại đây</a></p>
-        <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/AgriculturePromotion/googleCallback&response_type=code&client_id=799257369726-5f4bmtll9vr8hb1e066asncb2c1i0m4t.apps.googleusercontent.com&access_type=offline&prompt=consent"
-           class="google-signin-button">
-            <img class="google-icon" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
-            Sign in with Google
-        </a>
-    </div>
-            <% if (request.getAttribute("error") != null) { %>
-            <p class="error-message text-danger"><%= request.getAttribute("error") %></p>
-            <% } %>
+            <div class="register-now">
+                Bạn chưa có tài khoản? <a href="${pageContext.request.contextPath}/register.jsp">Đăng ký ngay</a>
+            </div>
+         
         </div>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            function checkCaptcha() {
-                var response = grecaptcha.getResponse();
-                var errorCaptcha = document.getElementById("errorCaptcha");
+                function checkCaptcha() {
+                    var response = grecaptcha.getResponse();
+                    var errorCaptcha = document.getElementById("errorCaptcha");
 
-                if (!response) {
-                    errorCaptcha.textContent = "Vui lòng xác nhận bạn không phải robot!";
-                    return false;
+                    if (!response) {
+                        errorCaptcha.textContent = "Vui lòng xác nhận bạn không phải robot!";
+                        return false;
+                    }
+
+                    return true;
                 }
-
-                return true;
-            }
         </script>
     </body>
 </html>
