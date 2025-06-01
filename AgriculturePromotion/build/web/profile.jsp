@@ -14,6 +14,15 @@
     String avatarPath = user.getAvatar();
     String defaultAvatar = "img/default-avatar.jpg";
     String displayAvatar = (avatarPath == null || avatarPath.trim().isEmpty()) ? defaultAvatar : avatarPath;
+    
+    String roleVN = "";
+    if ("admin".equals(user.getRole())) {
+        roleVN = "Quản trị viên";
+    } else if ("business".equals(user.getRole())) {
+        roleVN = "Doanh nghiệp";
+    } else {
+        roleVN = "Chưa xác định";
+    }
 %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -303,6 +312,12 @@
                                 <th>Họ tên</th>
                                 <td><%= user.getFullName() != null ? user.getFullName() : "Chưa cập nhật" %></td>
                             </tr>
+                            <% if ("admin".equals(user.getRole()) || "business".equals(user.getRole())) { %>
+                            <tr>
+                                <th>Vai trò</th>
+                                <td><%= roleVN %></td>
+                            </tr>
+                            <% } %>
                             <tr>
                                 <th>Giới tính</th>
                                 <td><%= user.getGender() != null ? user.getGender() : "Chưa cập nhật" %></td>

@@ -29,6 +29,7 @@ public class BusinessRegistration {
     private String fileName;
     private String filePath;
     private String status;
+    private String rejectionReason;
     private Date submittedAt;
 
     public BusinessRegistration() {
@@ -189,6 +190,14 @@ public class BusinessRegistration {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
     }
 
     public Date getSubmittedAt() {
