@@ -20,7 +20,7 @@ public class UserDAO {
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new User(
+                User user = new User(
                         rs.getInt("id"),
                         rs.getString("email"),
                         rs.getString("role"),
@@ -28,10 +28,13 @@ public class UserDAO {
                         rs.getString("address"),
                         rs.getDate("birthday"),
                         rs.getTimestamp("created_at"),
-                        rs.getString("fullname"), // Added
+                        rs.getString("fullname"),
                         rs.getString("gender"),
-                        rs.getString("password")// Added
+                        rs.getString("password")
                 );
+                user.setLocked(rs.getBoolean("locked")); // 👈 BẮT BUỘC PHẢI CÓ
+                user.setLastLogin(rs.getTimestamp("last_login")); // Nếu cần
+                return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -177,7 +180,7 @@ public class UserDAO {
             return false;
         }
     }
-    
+
     public boolean verifyPassword(String email, String password) throws SQLException {
         String sql = "SELECT password FROM users WHERE email = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -193,6 +196,7 @@ public class UserDAO {
         System.err.println("UserDAO.verifyPassword: No user found for email: " + email);
         return false;
     }
+
     public void deleteResetRequest(String email, String otp) {
         String sql = "DELETE FROM password_resets WHERE email = ? AND otp = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -362,7 +366,8 @@ public class UserDAO {
         }
         return null;
     }
-     public List<BusinessRegistration> getAllBusinessRegistrations() throws Exception {
+
+    public List<BusinessRegistration> getAllBusinessRegistrations() throws Exception {
         List<BusinessRegistration> list = new ArrayList<>();
         String sql = "SELECT * FROM business_registration ORDER BY submitted_at DESC";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -493,7 +498,7 @@ public class UserDAO {
                     reg.setStatus(rs.getString("status"));
                     reg.setRejectReason(rs.getString("rejection_reason"));
                     reg.setSubmittedAt(rs.getTimestamp("submitted_at"));
-                    
+
                     list.add(reg);
                 }
             }

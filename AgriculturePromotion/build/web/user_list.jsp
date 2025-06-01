@@ -12,8 +12,8 @@
 <head>
     <meta charset="UTF-8" />
     <title>Danh sách người dùng</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -46,7 +46,6 @@
         }
         table {
             width: 100%;
-            table-layout: auto;
         }
         thead {
             background: #1b4332;
@@ -58,25 +57,20 @@
             padding: 1rem;
             font-size: 0.95rem;
             vertical-align: middle;
-            white-space: normal;
-            word-wrap: break-word;
             word-break: break-word;
         }
         tbody tr:hover {
             background: #f1f9f1;
             transition: background 0.2s ease;
         }
-        td:last-child {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
+        td.actions {
+            text-align: center;
         }
         .btn-action {
             border-radius: 12px;
             font-size: 0.85rem;
             padding: 0.4rem 0.75rem;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 0.4rem;
             white-space: nowrap;
@@ -97,115 +91,100 @@
             font-style: italic;
             padding: 2rem;
         }
-        @media (max-width: 768px) {
-            th, td {
-                font-size: 0.85rem;
-                padding: 0.75rem;
-            }
-            .btn-action {
-                font-size: 0.8rem;
-                padding: 0.3rem 0.6rem;
-            }
-            td:last-child {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Nút quay lại -->
-        <div class="d-flex justify-content-start mb-3">
-            <a href="<%= contextPath %>/adminDashboard.jsp" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left"></i> Quay lại trang quản trị
-            </a>
-        </div>
+<div class="container">
 
-        <h2>Danh sách người dùng</h2>
-
-        <!-- Form tìm kiếm -->
-        <form method="get" action="<%= contextPath %>/admin/user-list" class="d-flex justify-content-center mb-4 gap-2 flex-wrap">
-            <input type="text" name="keyword" class="form-control" placeholder="Tìm theo tên"
-                   style="max-width: 300px;" value="<%= keyword != null ? keyword : "" %>"/>
-            <button type="submit" class="btn btn-success">Tìm kiếm</button>
-        </form>
-
-        <% if (message != null) { %>
-        <div class="message"><%= message %></div>
-        <% } %>
-
-        <!-- Bảng danh sách người dùng -->
-        <div class="table-container">
-            <table class="table table-hover align-middle">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Họ tên</th>
-                        <th>Email</th>
-                        <th>Giới tính</th>
-                        <th>Ngày sinh</th>
-                        <th>SĐT</th>
-                        <th>Địa chỉ</th>
-                        <th>Vai trò</th>
-                        <th>Ngày tạo</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%
-                        boolean hasUser = false;
-                        if (users != null && !users.isEmpty()) {
-                            for (User u : users) {
-                                if ("admin".equalsIgnoreCase(u.getRole())) continue;
-                                hasUser = true;
-                    %>
-                    <tr>
-                        <td><%= u.getId() %></td>
-                        <td><%= u.getFullName() %></td>
-                        <td><%= u.getEmail() %></td>
-                        <td><%= u.getGender() %></td>
-                        <td><%= u.getBirthday() != null ? u.getBirthday().toString() : "" %></td>
-                        <td><%= u.getPhone() %></td>
-                        <td><%= u.getAddress() %></td>
-                        <td><%= u.getRole() %></td>
-                        <td><%= u.getCreatedAt() != null ? u.getCreatedAt().toLocalDateTime().toString() : "" %></td>
-                        <td>
-                            <% if (u.isLocked()) { %>
-                                <a href="<%= contextPath %>/admin/lock-user?id=<%= u.getId() %>&action=unlock"
-                                   class="btn btn-lock btn-action"
-                                   onclick="return confirm('Bạn có chắc muốn mở khóa tài khoản này?');">
-                                    <i class="bi bi-unlock"></i> Mở khóa
-                                </a>
-                            <% } else { %>
-                                <a href="<%= contextPath %>/admin/lock-user?id=<%= u.getId() %>&action=lock"
-                                   class="btn btn-lock btn-action"
-                                   onclick="return confirm('Bạn có chắc muốn khóa tài khoản này?');">
-                                    <i class="bi bi-lock"></i> Khóa
-                                </a>
-                            <% } %>
-                            <a href="<%= contextPath %>/admin/delete-user?id=<%= u.getId() %>"
-                               class="btn btn-delete btn-action"
-                               onclick="return confirm('Bạn có chắc muốn xóa người dùng này?');">
-                                <i class="bi bi-trash"></i> Xóa
-                            </a>
-                        </td>
-                    </tr>
-                    <%
-                            }
-                        }
-                        if (!hasUser) {
-                    %>
-                    <tr>
-                        <td colspan="10" class="no-users">Không có người dùng nào</td>
-                    </tr>
-                    <% } %>
-                </tbody>
-            </table>
-        </div>
+    <!-- Nút quay lại -->
+    <div class="d-flex justify-content-start mb-3">
+        <a href="<%= contextPath %>/adminDashboard.jsp" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Quay lại trang quản trị
+        </a>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <h2>Danh sách người dùng</h2>
+
+    <!-- Form tìm kiếm -->
+    <form method="get" action="<%= contextPath %>/admin/user-list" class="d-flex justify-content-center mb-4 gap-2 flex-wrap">
+        <input type="text" name="keyword" class="form-control" placeholder="Tìm theo tên"
+               style="max-width: 300px;" value="<%= keyword != null ? keyword : "" %>" />
+        <button type="submit" class="btn btn-success">Tìm kiếm</button>
+    </form>
+
+    <% if (message != null) { %>
+        <div class="message"><%= message %></div>
+    <% } %>
+
+    <!-- Bảng danh sách -->
+    <div class="table-container">
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Giới tính</th>
+                <th>Ngày sinh</th>
+                <th>SĐT</th>
+                <th>Địa chỉ</th>
+                <th>Vai trò</th>
+                <th class="text-center align-middle">Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                boolean hasUser = false;
+                if (users != null && !users.isEmpty()) {
+                    for (User u : users) {
+                        if ("admin".equalsIgnoreCase(u.getRole())) continue;
+                        hasUser = true;
+            %>
+            <tr>
+                <td><%= u.getId() %></td>
+                <td><%= u.getFullName() %></td>
+                <td><%= u.getEmail() %></td>
+                <td><%= u.getGender() %></td>
+                <td><%= u.getBirthday() != null ? u.getBirthday().toString() : "" %></td>
+                <td><%= u.getPhone() %></td>
+                <td><%= u.getAddress() %></td>
+                <td><%= u.getRole() %></td>
+                <td class="actions">
+                    <% if (u.isLocked()) { %>
+                        <a href="<%= contextPath %>/admin/lock-user?id=<%= u.getId() %>&action=unlock"
+                           class="btn btn-lock btn-action"
+                           onclick="return confirm('Bạn có chắc muốn mở khóa tài khoản này?');">
+                            <i class="bi bi-unlock"></i> Mở khóa
+                        </a>
+                    <% } else { %>
+                        <a href="<%= contextPath %>/admin/lock-user?id=<%= u.getId() %>&action=lock"
+                           class="btn btn-lock btn-action"
+                           onclick="return confirm('Bạn có chắc muốn khóa tài khoản này?');">
+                            <i class="bi bi-lock"></i> Khóa
+                        </a>
+                    <% } %>
+                    <a href="<%= contextPath %>/admin/delete-user?id=<%= u.getId() %>"
+                       class="btn btn-delete btn-action"
+                       onclick="return confirm('Bạn có chắc muốn xóa người dùng này?');">
+                        <i class="bi bi-trash"></i> Xóa
+                    </a>
+                </td>
+            </tr>
+            <%
+                    }
+                }
+                if (!hasUser) {
+            %>
+            <tr>
+                <td colspan="9" class="no-users">Không có người dùng nào</td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
