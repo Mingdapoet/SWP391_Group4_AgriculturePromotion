@@ -7,8 +7,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 
-@WebServlet(name="LoginServlet", urlPatterns={"/login"})
+@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String email = request.getParameter("email");
@@ -17,12 +18,20 @@ public class LoginServlet extends HttpServlet {
             UserDAO dao = new UserDAO();
             User user = dao.login(email, password);
             if (user != null) {
-                HttpSession session = request.getSession();
-                session.setAttribute("user", user);
-                response.sendRedirect(request.getContextPath() + "/index.jsp");
+                if (user.isLocked()) {
+                    // Tài khoản bị khóa
+                    request.setAttribute("error", "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
+                    request.getRequestDispatcher("/login.jsp").forward(request, response);
+                } else {
+                    // Đăng nhập thành công
+                    HttpSession session = request.getSession();
+                    session.setAttribute("user", user);
+                    response.sendRedirect(request.getContextPath() + "/index.jsp");
+                }
             } else {
-                request.setAttribute("error", "Invalid email or password");
-                request.getRequestDispatcher("/login.jsp").forward(request, response); // Updated path
+                // Email hoặc mật khẩu sai
+                request.setAttribute("error", "Email hoặc mật khẩu không đúng.");
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();

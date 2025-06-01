@@ -31,6 +31,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thông tin cá nhân</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
             body {
                 font-family: 'Roboto', sans-serif;
@@ -294,6 +295,9 @@
 
                 <div class="col-md-9 center-content">
                     <div class="profile-card w-100" style="max-width: 500px;">
+                        <%-- Tích hợp notification.jsp để hiển thị thông báo --%>
+                        <%@ include file="notification.jsp" %>
+
                         <% if ("success".equals(msg)) { %>
                         <div class="alert alert-success" id="success-alert">Cập nhật thông tin thành công!</div>
                         <% } else if ("business_success".equals(msg)) { %>
@@ -349,6 +353,19 @@
         </div>
 
         <script>
+             document.addEventListener('DOMContentLoaded', function() {
+                var alerts = document.querySelectorAll('.alert');
+                if (alerts.length > 0) {
+                    setTimeout(function() {
+                        alerts.forEach(function(alert) {
+                            alert.classList.remove('show');
+                            alert.classList.add('fade');
+                            setTimeout(() => alert.remove(), 150);
+                        });
+                    }, 5000);
+                }
+            });
+
             window.onload = function () {
                 var alertBox = document.getElementById('success-alert');
                 if (alertBox) {
