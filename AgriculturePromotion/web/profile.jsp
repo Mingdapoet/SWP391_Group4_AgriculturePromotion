@@ -205,9 +205,9 @@
         <div class="header-top">
             <div class="container-fluid">
                 <div class="logo">
-                    <a href="${pageContext.request.contextPath}/index.jsp">
-                        <img src="https://img.icons8.com/color/48/000000/plant.png" alt="Logo">
-                    </a>
+                     <a href="${pageContext.request.contextPath}/index.jsp">
+                            <img src="images/logonongsan.png" style="height: 48px;">
+                        </a>
                 </div>
                 <div class="search">
                     <input type="text" placeholder="Tìm kiếm sản phẩm...">
