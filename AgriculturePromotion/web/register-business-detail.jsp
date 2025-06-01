@@ -296,6 +296,13 @@
                                     <% } %>
                                 </td>
                             </tr>
+                            <%-- Hiển thị lý do bị từ chối nếu có --%>
+                            <% if ("rejected".equals(reg.getStatus()) && reg.getRejectionReason() != null && !reg.getRejectionReason().trim().isEmpty()) { %>
+                            <tr>
+                                <th class="detail-label text-danger">Lý do bị từ chối</th>
+                                <td class="detail-value text-danger"><%= reg.getRejectionReason() %></td>
+                            </tr>
+                            <% } %>
                             <tr>
                                 <th class="detail-label">Tên công ty</th>
                                 <td class="detail-value"><%= reg.getCompanyName() %></td>
@@ -345,7 +352,6 @@
                                 <th class="detail-label">Ngày gửi</th>
                                 <td class="detail-value"><%= reg.getSubmittedAt() %></td>
                             </tr>
-
                             <tr>
                                 <th class="detail-label">Giấy phép kinh doanh</th>
                                 <td>
@@ -369,8 +375,6 @@
                                     <% } %>
                                 </td>
                             </tr>
-
-
                         </table>
                         <div class="mt-3">
                             <a href="Account?action=listBusiness" class="btn btn-secondary back-btn">← Quay lại danh sách</a>

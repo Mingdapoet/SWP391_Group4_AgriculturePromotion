@@ -357,7 +357,7 @@
                         </div>
                         <!-- Nếu chọn Khác thì show input -->
                         <div class="mb-3" id="customTypeWrapper" style="<%= "Khác".equals(request.getAttribute("businessType")) ? "display:block;" : "display:none;" %>">
-                            <label for="customType" class="form-label">Nhập loại hình khác</label>
+                            <label for="customType" class="form-label">Nhập loại hình khác *</label>
                             <input type="text" class="form-control<%= errors != null && errors.get("customTypeError") != null ? " is-invalid" : "" %>"
                                    id="customType" name="customType"
                                    value="<%= request.getAttribute("customType") == null ? "" : request.getAttribute("customType") %>">
@@ -436,7 +436,7 @@
 
                         <!-- File giấy phép -->
                         <div class="mb-3">
-                            <label for="legalDoc" class="form-label">Giấy chứng nhận đăng ký kinh doanh</label>
+                            <label for="legalDoc" class="form-label">Giấy chứng nhận đăng ký kinh doanh *</label>
                             <input type="file" class="form-control<%= errors != null && errors.get("legalDocError") != null ? " is-invalid" : "" %>"
                                    id="legalDoc" name="legalDoc" accept=".pdf,.doc,.docx">
                             <% if (errors != null && errors.get("legalDocError") != null) { %>
@@ -449,7 +449,7 @@
                             <input type="checkbox" class="form-check-input<%= errors != null && errors.get("commitmentError") != null ? " is-invalid" : "" %>"
                                    id="commitment" name="commitment"  >
                             <label class="form-check-label" for="commitment">
-                                Tôi cam kết thông tin đã khai là chính xác và chịu trách nhiệm trước pháp luật
+                                Tôi cam kết thông tin đã khai là chính xác và chịu trách nhiệm trước pháp luật *
                             </label>
                             <% if (errors != null && errors.get("commitmentError") != null) { %>
                             <div class="invalid-feedback d-block"><%= errors.get("commitmentError") %></div>

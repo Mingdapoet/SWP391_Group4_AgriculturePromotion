@@ -321,6 +321,7 @@ public class UserDAO {
                     reg.setFileName(rs.getString("file_name"));
                     reg.setFilePath(rs.getString("file_path"));
                     reg.setStatus(rs.getString("status"));
+                    reg.setRejectionReason(rs.getString("rejection_reason"));
                     reg.setSubmittedAt(rs.getTimestamp("submitted_at"));
                     list.add(reg);
                 }
@@ -353,6 +354,7 @@ public class UserDAO {
                     reg.setFileName(rs.getString("file_name"));
                     reg.setFilePath(rs.getString("file_path"));
                     reg.setStatus(rs.getString("status"));
+                    reg.setRejectionReason(rs.getString("rejection_reason"));
                     reg.setSubmittedAt(rs.getTimestamp("submitted_at"));
                     return reg;
                 }
