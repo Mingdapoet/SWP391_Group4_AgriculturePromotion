@@ -11,6 +11,18 @@
     if (msg == null) {
         msg = "";
     }
+    String avatarPath = user.getAvatar();
+    String defaultAvatar = "img/default-avatar.jpg";
+    String displayAvatar = (avatarPath == null || avatarPath.trim().isEmpty()) ? defaultAvatar : avatarPath;
+    
+    String roleVN = "";
+    if ("admin".equals(user.getRole())) {
+        roleVN = "Quản trị viên";
+    } else if ("business".equals(user.getRole())) {
+        roleVN = "Doanh nghiệp";
+    } else {
+        roleVN = "Chưa xác định";
+    }
 %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -19,6 +31,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thông tin cá nhân</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
             body {
                 font-family: 'Roboto', sans-serif;
@@ -265,27 +278,50 @@
                     <div class="sidebar">
                         <h4>Menu</h4>
                         <a href="profile.jsp" class="sidebar-link">Thông tin cá nhân</a>
+                        <% 
+                            String role = user.getRole();
+                            if ("customer".equals(role) || "business".equals(role)) { 
+                        %>
                         <a href="#" class="sidebar-link" onclick="toggleBusinessDropdown(); return false;">
                             Đăng ký doanh nghiệp <span style="font-size:0.8em;">▼</span>
                         </a>
                         <div id="business-dropdown" style="display: none; margin-left: 16px;">
                             <a href="register-business.jsp" class="sidebar-link">Viết đơn</a>
-                            <a href="register-business-list.jsp" class="sidebar-link">Xem danh sách đơn</a>
+                            <a href="Account?action=listBusiness" class="sidebar-link">Xem danh sách đơn</a>
                         </div>
+                        <% } %>
                     </div>
                 </div>
+
                 <div class="col-md-9 center-content">
                     <div class="profile-card w-100" style="max-width: 500px;">
+                        <%-- Tích hợp notification.jsp để hiển thị thông báo --%>
+                        <%@ include file="notification.jsp" %>
+
                         <% if ("success".equals(msg)) { %>
-                        <div class="alert alert-success">Cập nhật thông tin thành công!</div>
+                        <div class="alert alert-success" id="success-alert">Cập nhật thông tin thành công!</div>
                         <% } else if ("business_success".equals(msg)) { %>
-                        <div class="alert alert-success">Đăng ký doanh nghiệp thành công!</div>
+                        <div class="alert alert-success" id="success-alert">Đăng ký doanh nghiệp thành công!</div>
                         <% } %>
 
-                        <div class="profile-title mb-3">
-                            <%= user.getFullName() != null ? user.getFullName() : "Chưa cập nhật" %>
+
+                        <div class="d-flex flex-column align-items-center mb-3">
+                            <div style="width: 112px; height: 112px; border-radius: 50%; overflow: hidden; box-shadow: 0 2px 8px #ccc;">
+                                <img src="<%= user.getAvatar() != null && !user.getAvatar().isEmpty() ? user.getAvatar() : "img/default-avatar.jpg" %>" 
+                                     alt="Avatar" style="width:112px;height:112px;object-fit:cover;">
+                            </div>
                         </div>
                         <table class="table profile-table">
+                            <tr>
+                                <th>Họ tên</th>
+                                <td><%= user.getFullName() != null ? user.getFullName() : "Chưa cập nhật" %></td>
+                            </tr>
+                            <% if ("admin".equals(user.getRole()) || "business".equals(user.getRole())) { %>
+                            <tr>
+                                <th>Vai trò</th>
+                                <td><%= roleVN %></td>
+                            </tr>
+                            <% } %>
                             <tr>
                                 <th>Giới tính</th>
                                 <td><%= user.getGender() != null ? user.getGender() : "Chưa cập nhật" %></td>
@@ -317,6 +353,19 @@
         </div>
 
         <script>
+             document.addEventListener('DOMContentLoaded', function() {
+                var alerts = document.querySelectorAll('.alert');
+                if (alerts.length > 0) {
+                    setTimeout(function() {
+                        alerts.forEach(function(alert) {
+                            alert.classList.remove('show');
+                            alert.classList.add('fade');
+                            setTimeout(() => alert.remove(), 150);
+                        });
+                    }, 5000);
+                }
+            });
+
             window.onload = function () {
                 var alertBox = document.getElementById('success-alert');
                 if (alertBox) {

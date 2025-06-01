@@ -508,28 +508,7 @@
                     </li>
                 </ul>
 
-                <div class="user-actions ms-auto d-flex gap-3">
-                    <% if (user == null) { %>
-                    <a class="text-white" href="${pageContext.request.contextPath}/login.jsp">Đăng nhập</a>
-                    <a class="text-white" href="${pageContext.request.contextPath}/register.jsp">Đăng ký</a>
-                    <% } else { %>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user"></i> <%= user.getFullName() %>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-                            <li><a class="dropdown-item" href="profile.jsp">Thông tin cá nhân</a></li>
-                            <% if ("admin".equals(user.getRole())) { %>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/adminDashboard.jsp">Quản lý người dùng</a></li>
-                            <% } %>
-                            <% if ("admin".equals(user.getRole()) || "business".equals(user.getRole())) { %>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/posts?action=manageList">Danh sách bài viết</a></li>
-                            <% } %>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
-                        </ul>
-                    </li>
-                    <% } %>
+
                 </div>
             </div>
         </div>

@@ -121,12 +121,31 @@
             .form-group {
                 margin-bottom: 1rem;
             }
-            
+            .eye-button {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                border: none;
+                background: transparent;
+                cursor: pointer;
+                opacity: 0.7;
+                transition: opacity 0.3s ease;
+            }
+
+            .eye-button:hover {
+                opacity: 1;
+            }
+
+
         </style>
     </head>
     <body>
         <div class="login-container">
             <h2><i class="fas fa-leaf me-2"></i>Đăng nhập</h2>
+            <%-- Tích hợp notification.jsp để hiển thị thông báo --%>
+            <%@ include file="notification.jsp" %>
+
             <div class="social-login">
                 <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile%20openid&redirect_uri=http://localhost:8080/AgriculturePromotion/googleCallback&response_type=code&client_id=799257369726-5f4bmtll9vr8hb1e066asncb2c1i0m4t.apps.googleusercontent.com&access_type=offline&prompt=consent" class="google-signin-button">
                     <img class="google-icon" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
@@ -142,7 +161,13 @@
                 </div>
                 <div class="form-group">
                     <label for="password" class="form-label">Nhập mật khẩu</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="position-relative">
+                        <input type="password" class="form-control pe-5" id="password" name="password" required>
+                        <button type="button" class="eye-button" onclick="togglePasswordVisibility()">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+
                     <div class="forgot-password text-end mt-1">
                         <a href="forgotpassword.jsp" class="text-decoration-none text-success fw-medium">Quên mật khẩu?</a>
                     </div>
@@ -164,17 +189,43 @@
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-                function checkCaptcha() {
-                    var response = grecaptcha.getResponse();
-                    var errorCaptcha = document.getElementById("errorCaptcha");
+                            function checkCaptcha() {
+                                var response = grecaptcha.getResponse();
+                                var errorCaptcha = document.getElementById("errorCaptcha");
 
-                    if (!response) {
-                        errorCaptcha.textContent = "Vui lòng xác nhận bạn không phải robot!";
-                        return false;
-                    }
+                                if (!response) {
+                                    errorCaptcha.textContent = "Vui lòng xác nhận bạn không phải robot!";
+                                    return false;
+                                }
 
-                    return true;
-                }
+                                return true;
+                            }
+                            document.addEventListener('DOMContentLoaded', function () {
+                                var alerts = document.querySelectorAll('.alert');
+                                if (alerts.length > 0) {
+                                    setTimeout(function () {
+                                        alerts.forEach(function (alert) {
+                                            alert.classList.remove('show');
+                                            alert.classList.add('fade');
+                                            setTimeout(() => alert.remove(), 150);
+                                        });
+                                    }, 5000);
+                                }
+                            });
+                            function togglePasswordVisibility() {
+                                var passwordField = document.getElementById("password");
+                                var eyeIcon = document.querySelector(".eye-button i");
+
+                                if (passwordField.type === "password") {
+                                    passwordField.type = "text";
+                                    eyeIcon.classList.remove("fa-eye");
+                                    eyeIcon.classList.add("fa-eye-slash");
+                                } else {
+                                    passwordField.type = "password";
+                                    eyeIcon.classList.remove("fa-eye-slash");
+                                    eyeIcon.classList.add("fa-eye");
+                                }
+                            }
         </script>
     </body>
 </html>
