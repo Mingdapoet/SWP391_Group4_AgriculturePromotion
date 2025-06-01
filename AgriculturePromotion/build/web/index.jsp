@@ -411,7 +411,7 @@
                             <a class="nav-link text-white" href="${pageContext.request.contextPath}/products.jsp">Sản phẩm</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="${pageContext.request.contextPath}/news.jsp">Tin tức</a>
+                            <a class="nav-link text-white" href="${pageContext.request.contextPath}/posts?action=publicList">Tin tức</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="${pageContext.request.contextPath}/foods.jsp">Đặc sản</a>
@@ -433,9 +433,14 @@
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
                                 <li><a class="dropdown-item" href="profile.jsp">Thông tin cá nhân</a></li>
                                     <% if ("admin".equals(user.getRole())) { %>
-                               
+
                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/adminDashboard.jsp">Quản lý người dùng</a></li>
                                     <% } %>
+                                <%-- Thêm nút Danh sách bài viết nếu là business hoặc admin --%>
+                                <% if ("admin".equals(user.getRole()) || "business".equals(user.getRole())) { %>
+                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/posts?action=manageList">Danh sách bài viết</a></li>
+                                <%-- Thay đổi URL "/posts?action=manageList" cho phù hợp với trang quản lý bài viết của bạn --%>
+                                <% } %>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Đăng xuất</a></li>
                             </ul>
