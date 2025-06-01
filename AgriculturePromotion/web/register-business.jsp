@@ -331,13 +331,13 @@
                         <!-- Địa chỉ trụ sở chính -->
                         <div class="mb-3">
                             <label for="headquarters" class="form-label">Địa chỉ trụ sở chính *</label>
-                            <input type="text" class="form-control<%= errors != null && errors.get("headquartersError") != null ? " is-invalid" : "" %>"
-                                   id="headquarters" name="headquarters"
-                                   value="<%= request.getAttribute("headquarters") == null ? "" : request.getAttribute("headquarters") %>"  >
+                            <textarea class="form-control<%= errors != null && errors.get("headquartersError") != null ? " is-invalid" : "" %>"
+                                      id="headquarters" name="headquarters" rows="3" style="resize: vertical; min-height: 48px;"><%= request.getAttribute("headquarters") == null ? "" : request.getAttribute("headquarters") %></textarea>
                             <% if (errors != null && errors.get("headquartersError") != null) { %>
                             <div class="invalid-feedback d-block"><%= errors.get("headquartersError") %></div>
                             <% } %>
                         </div>
+
 
                         <!-- Loại hình doanh nghiệp -->
                         <div class="mb-3">

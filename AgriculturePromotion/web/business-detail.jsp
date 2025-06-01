@@ -227,7 +227,7 @@
         <div class="detail-row"><div class="label">Số điện thoại:</div><div class="value">${registration.companyPhone}</div></div>
         <div class="detail-row"><div class="label">Trụ sở chính:</div><div class="value">${registration.headOffice}</div></div>
         <div class="detail-row"><div class="label">Loại hình doanh nghiệp:</div><div class="value">${registration.businessType}</div></div>
-        <div class="detail-row"><div class="label">Loại khách hàng:</div><div class="value">${registration.customType}</div></div>
+        <div class="detail-row"><div class="label"></div><div class="value">${registration.customType}</div></div>
         <div class="detail-row"><div class="label">Họ tên đại diện:</div><div class="value">${registration.repFullName}</div></div>
         <div class="detail-row"><div class="label">Chức vụ đại diện:</div><div class="value">${registration.repPosition}</div></div>
         <div class="detail-row"><div class="label">Email đại diện:</div><div class="value">${registration.repEmail}</div></div>
