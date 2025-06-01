@@ -7,6 +7,7 @@
     <head>
         <meta charset="UTF-8"/>
         <title>Chi tiết đơn đăng ký doanh nghiệp</title>
+        <!-- (Giữ nguyên phần CSS và JavaScript như bạn đã viết) -->
         <style>
             /* Reset cơ bản */
             *, *::before, *::after {
@@ -200,7 +201,7 @@
         </script>
     </head>
     <body>
-        
+
         <h2>Chi tiết đơn đăng ký doanh nghiệp</h2>
 
         <div class="detail-row">
@@ -212,7 +213,7 @@
                     </c:when>
                     <c:when test="${registration.status == 'rejected'}">
                         <span class="status-rejected">Đã từ chối</span>
-                        <small class="reject-reason-text">Lý do: ${registration.rejectReason}</small>
+                        <small class="reject-reason-text">Lý do: ${registration.rejectionReason}</small>
                     </c:when>
                     <c:otherwise>
                         <span class="status-pending">Chờ duyệt</span>
@@ -255,7 +256,7 @@
                 <input type="hidden" name="id" value="${registration.id}"/>
 
                 <label for="reason" class="reject-reason-label">Lý do từ chối:</label>
-                <input type="text" id="reason" name="reason" placeholder="Nhập lý do từ chối nếu có"/>
+                <input type="text" id="reason" name="rejectionReason" placeholder="Nhập lý do từ chối nếu có"/>
 
                 <div class="button-group">
                     <button type="submit" name="action" value="approve" class="btn btn-approve">Phê duyệt</button>
