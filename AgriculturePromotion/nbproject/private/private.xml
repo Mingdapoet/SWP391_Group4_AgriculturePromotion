@@ -3,26 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/D:/FPT/SU25/SWP391/Project/Code/Code/SWP301_Group4_AgriculturePromotion/AgriculturePromotion/src/java/controller/login/AccountServlet.java</file>
-            <file>file:/D:/FPT/SU25/SWP391/Project/Code/Code/SWP301_Group4_AgriculturePromotion/AgriculturePromotion/web/profile.jsp</file>
-            <file>file:/D:/FPT/SU25/SWP391/Project/Code/Code/SWP301_Group4_AgriculturePromotion/AgriculturePromotion/src/java/dal/UserDAO.java</file>
-            <file>file:/D:/FPT/SU25/SWP391/Project/Code/Code/SWP301_Group4_AgriculturePromotion/AgriculturePromotion/src/java/domain/User.java</file>
-            <file>file:/D:/FPT/SU25/SWP391/Project/Code/Code/SWP301_Group4_AgriculturePromotion/AgriculturePromotion/src/java/domain/BusinessRegistration.java</file>
-            <file>file:/D:/FPT/SU25/SWP391/Project/Code/Code/SWP301_Group4_AgriculturePromotion/AgriculturePromotion/web/editprofile.jsp</file>
-=======
-            <file>file:/D:/SUM25/SWP/AgriculturePromotion/src/java/dal/UserDAO.java</file>
-            <file>file:/D:/SUM25/SWP/AgriculturePromotion/web/forgotpassword.jsp</file>
-            <file>file:/D:/SUM25/SWP/AgriculturePromotion/web/profile.jsp</file>
-            <file>file:/D:/SUM25/SWP/AgriculturePromotion/src/java/controller/login/AccountServlet.java</file>
-            <file>file:/D:/SUM25/SWP/AgriculturePromotion/web/notification.jsp</file>
-            <file>file:/D:/SUM25/SWP/AgriculturePromotion/src/java/controller/login/LoginServlet.java</file>
-            <file>file:/D:/SUM25/SWP/AgriculturePromotion/web/login.jsp</file>
-            <file>file:/D:/SUM25/SWP/AgriculturePromotion/web/editprofile.jsp</file>
-            <file>file:/D:/SUM25/SWP/AgriculturePromotion/src/java/controller/login/ForgotPasswordServlet.java</file>
-            <file>file:/D:/SUM25/SWP/AgriculturePromotion/src/java/controller/login/ChangePasswordServlet.java</file>
-            <file>file:/D:/SUM25/SWP/AgriculturePromotion/web/changepassword.jsp</file>
->>>>>>> 3411f08f413032275fbfa4970bfad63d0fe53562
+
+
         </group>
     </open-files>
 </project-private>
