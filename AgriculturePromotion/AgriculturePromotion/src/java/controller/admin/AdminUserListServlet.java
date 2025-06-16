@@ -17,8 +17,7 @@ public class AdminUserListServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         try {
-            UserDelDAO dao = new UserDelDAO(); // DAO đã có search
-
+            UserDelDAO dao = new UserDelDAO(); 
             String keyword = request.getParameter("keyword");
 
             List<User> users;

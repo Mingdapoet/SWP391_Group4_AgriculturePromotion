@@ -40,7 +40,7 @@ public class BusinessRegistrationDetailServlet extends HttpServlet {
                 return;
             }
 
-            // ❌ KHÔNG chuyển status sang tiếng Việt nữa
+          
             request.setAttribute("registration", reg);
             request.getRequestDispatcher("/business-detail.jsp").forward(request, response);
         } catch (Exception e) {

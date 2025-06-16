@@ -13,12 +13,9 @@
         <meta charset="UTF-8" />
         <title>Admin Dashboard | AgriPromotion</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <!-- FontAwesome -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />     
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-        <style>
-            /* giữ nguyên style cũ */
+        <style>           
             html, body {
                 height: 100%;
                 margin: 0;
@@ -53,7 +50,7 @@
                 flex-grow: 1;
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between; /* đẩy footer xuống dưới */
+                justify-content: space-between; 
                 min-height: 100vh;
             }
             .content-area {
@@ -62,11 +59,11 @@
             }
             .feature-card {
                 transition: transform 0.3s;
-                min-height: 280px; /* chiều cao cố định cho cân đối */
+                min-height: 280px; 
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: space-between; /* đẩy button xuống dưới */
+                justify-content: space-between;
                 padding: 20px;
             }
             .feature-card:hover {
@@ -79,7 +76,7 @@
                 font-weight: 600;
             }
             footer {
-                background-color: #2e7d32; /* Màu xanh đậm */
+                background-color: #2e7d32; 
                 color: #f8f9fa;
                 text-align: center;
                 padding: 15px 0;
@@ -146,7 +143,6 @@
                     </div>
 
                     <% } else { %>
-                    <!-- Nếu chưa đăng nhập hoặc role khác -->
                     <div class="no-access-message">
                         Vui lòng đăng nhập với tài khoản quản trị để truy cập trang này.
                     </div>

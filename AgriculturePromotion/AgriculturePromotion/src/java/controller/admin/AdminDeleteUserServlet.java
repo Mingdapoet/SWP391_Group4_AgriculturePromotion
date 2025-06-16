@@ -26,10 +26,10 @@ public class AdminDeleteUserServlet extends HttpServlet {
                 UserDelDAO dao = new UserDelDAO();
                 boolean deleted = dao.deleteUser(id);
 
-                // Tạo thông báo
+           
                 String message = deleted ? "Xóa thành công" : "Xóa thất bại";
 
-                // Redirect về trang danh sách (tránh lỗi forward cũ và refresh gây xóa lại)
+          
                 response.sendRedirect(request.getContextPath() + "/admin/user-list?message=" + URLEncoder.encode(message, "UTF-8"));
             } else {
                 response.sendRedirect(request.getContextPath() + "/admin/user-list?message=" + URLEncoder.encode("Thiếu ID", "UTF-8"));

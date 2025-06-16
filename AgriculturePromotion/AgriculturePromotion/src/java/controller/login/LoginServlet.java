@@ -20,7 +20,8 @@ public class LoginServlet extends HttpServlet {
             if (user != null) {
                 if (user.isLocked()) {
                     // Tài khoản bị khóa
-                    request.setAttribute("error", "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
+                    request.setAttribute("error", "Tài khoản của bạn đã bị khóa. Vui lòng <a href='" + request.getContextPath() + "/appeal.jsp'>viết đơn kháng cáo</a> để quản trị viên xem xét.");
+
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
                 } else {
                     // Đăng nhập thành công

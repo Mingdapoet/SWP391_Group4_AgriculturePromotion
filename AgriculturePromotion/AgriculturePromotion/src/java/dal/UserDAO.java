@@ -32,8 +32,8 @@ public class UserDAO {
                         rs.getString("gender"),
                         rs.getString("password")
                 );
-                user.setLocked(rs.getBoolean("locked")); 
-                user.setLastLogin(rs.getTimestamp("last_login")); 
+                user.setLocked(rs.getBoolean("locked"));
+                user.setLastLogin(rs.getTimestamp("last_login"));
                 return user;
             }
         } catch (SQLException e) {
@@ -77,6 +77,7 @@ public class UserDAO {
                         rs.getString("fullName"),
                         rs.getString("gender"),
                         rs.getString("password") // Sử dụng constructor mới
+                        
 
                 );
                 System.out.println("UserDAO.getUserByEmail - Email: " + email + ", Password: " + user.getPassword());
@@ -180,7 +181,7 @@ public class UserDAO {
             return false;
         }
     }
-    
+
     public boolean verifyPassword(String email, String password) throws SQLException {
         String sql = "SELECT password FROM users WHERE email = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -196,6 +197,7 @@ public class UserDAO {
         System.err.println("UserDAO.verifyPassword: No user found for email: " + email);
         return false;
     }
+
     public void deleteResetRequest(String email, String otp) {
         String sql = "DELETE FROM password_resets WHERE email = ? AND otp = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -365,7 +367,8 @@ public class UserDAO {
         }
         return null;
     }
-     public List<BusinessRegistration> getAllBusinessRegistrations() throws Exception {
+
+    public List<BusinessRegistration> getAllBusinessRegistrations() throws Exception {
         List<BusinessRegistration> list = new ArrayList<>();
         String sql = "SELECT * FROM business_registration ORDER BY submitted_at DESC";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -496,7 +499,7 @@ public class UserDAO {
                     reg.setStatus(rs.getString("status"));
                     reg.setRejectReason(rs.getString("rejection_reason"));
                     reg.setSubmittedAt(rs.getTimestamp("submitted_at"));
-                    
+
                     list.add(reg);
                 }
             }
@@ -513,7 +516,7 @@ public class UserDAO {
             ps.setInt(2, userId);
 
             int rowsUpdated = ps.executeUpdate();
-            return rowsUpdated > 0; // Nếu có bản ghi được cập nhật thì trả về true
+            return rowsUpdated > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -533,7 +536,7 @@ public class UserDAO {
                 user.setFullName(rs.getString("fullname"));
                 user.setEmail(rs.getString("email"));
                 user.setRole(rs.getString("role"));
-                user.setLocked(rs.getBoolean("locked")); // lấy trạng thái khóa
+                user.setLocked(rs.getBoolean("locked"));
                 // lấy các trường khác...
                 return user;
             }
@@ -542,5 +545,42 @@ public class UserDAO {
         }
         return null;
     }
+
+    public boolean updateUserLockStatusByEmail(String email, boolean locked) {
+    String sql = "UPDATE users SET locked = ? WHERE email = ?";
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setBoolean(1, locked);
+        ps.setString(2, email);
+        int rows = ps.executeUpdate();
+
+        return rows > 0;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+    public User getBasicUserByEmail(String email) {
+    String sql = "SELECT id, email, fullname, locked FROM users WHERE email = ?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, email);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setEmail(rs.getString("email"));
+            user.setFullName(rs.getString("fullname"));
+            user.setLocked(rs.getBoolean("locked"));
+            return user;
+        }
+    } catch (SQLException e) {
+        System.err.println("SQLException trong getBasicUserByEmail: " + e.getMessage()); 
+        e.printStackTrace();
+    }
+    return null;
+}
 
 }

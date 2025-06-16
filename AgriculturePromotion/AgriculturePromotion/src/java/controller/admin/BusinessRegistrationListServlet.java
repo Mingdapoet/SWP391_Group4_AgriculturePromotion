@@ -27,24 +27,23 @@ public class BusinessRegistrationListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Lấy tham số trạng thái từ query string để lọc
+            
             String statusFilter = request.getParameter("status");
 
             List<BusinessRegistration> registrations;
             if (statusFilter == null || statusFilter.isEmpty()) {
-                // Lấy tất cả
-                registrations = userDAO.getAllBusinessRegistrations();
+               registrations = userDAO.getAllBusinessRegistrations();
             } else {
-                // Lấy theo trạng thái
+              
                 registrations = userDAO.getBusinessRegistrationsByStatus(statusFilter);
             }
 
-            // Chuyển đổi trạng thái sang tiếng Việt (để hiển thị)
+           
             for (BusinessRegistration reg : registrations) {
                 reg.setStatus(mapStatusToVietnamese(reg.getStatus()));
             }
 
-            // Đưa lại trạng thái lọc về JSP để giữ lại lựa chọn người dùng
+           
             request.setAttribute("selectedStatus", statusFilter);
 
             request.setAttribute("registrations", registrations);
