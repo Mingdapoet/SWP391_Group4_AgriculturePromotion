@@ -39,6 +39,13 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
+    public User(int id, String email, String fullName, boolean locked) {
+        this.id = id;
+        this.email = email;
+        this.fullName = fullName;
+        this.locked = locked;
+    }
+
      public User(int id, String email, String role, String phone, String address, Date birthday, Timestamp createdAt, String fullName, String gender, boolean locked, Timestamp lastLogin) {
         this.id = id;
         this.email = email;

@@ -24,6 +24,22 @@
         <servlet-name>UserLockServlet</servlet-name>
         <servlet-class>controller.admin.UserLockServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SubmitAppealServlet</servlet-name>
+        <servlet-class>controller.appeal.SubmitAppealServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ApproveAppealServlet</servlet-name>
+        <servlet-class>controller.admin.ApproveAppealServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewAppealsServlet</servlet-name>
+        <servlet-class>controller.admin.ViewAppealsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RejectAppealServlet</servlet-name>
+        <servlet-class>controller.admin.RejectAppealServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminDeleteUserServlet</servlet-name>
         <url-pattern>/AdminDeleteUserServlet</url-pattern>
@@ -47,6 +63,22 @@
     <servlet-mapping>
         <servlet-name>UserLockServlet</servlet-name>
         <url-pattern>/UserLockServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubmitAppealServlet</servlet-name>
+        <url-pattern>/SubmitAppealServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ApproveAppealServlet</servlet-name>
+        <url-pattern>/ApproveAppealServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewAppealsServlet</servlet-name>
+        <url-pattern>/ViewAppealsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RejectAppealServlet</servlet-name>
+        <url-pattern>/RejectAppealServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

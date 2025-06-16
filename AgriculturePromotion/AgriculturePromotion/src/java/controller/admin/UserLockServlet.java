@@ -19,7 +19,7 @@ public class UserLockServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         String idParam = request.getParameter("id");
-        String action = request.getParameter("action"); // "lock" hoặc "unlock"
+        String action = request.getParameter("action"); 
 
         try {
             if (idParam != null && action != null) {
